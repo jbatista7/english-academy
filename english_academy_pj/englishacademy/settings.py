@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'schedules',
     'accounts',
     'authbg',
-    # 'multiselectfield',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
