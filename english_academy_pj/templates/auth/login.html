@@ -1,0 +1,52 @@
+{% extends 'auth/base.html' %}
+
+{% block title %}
+login
+{% endblock title %}
+
+{% block content %}
+
+
+    <!-- title-->
+    <h4 class="mt-0">Welcome Buddy!</h4>
+    <p class="text-muted mb-4">Enter your email address and password to access account.</p>
+
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+    {{error_message}}
+    </div>
+    {% endif %}
+    <!-- form -->
+    <form action="" method="POST">
+    {% csrf_token %}
+        <div class="mb-3">
+            <label for="emailaddress" class="form-label">Email address</label>
+            <input class="form-control" type="email" id="emailaddress" name="username" required="" placeholder="Enter your email">
+        </div>
+        <div class="mb-3">
+            <a href="{% url 'accounts:password-reset-view' %}" class="text-muted float-end"><small>Forgot your password?</small></a>
+            <label for="password" class="form-label">Password</label>
+            <input class="form-control" type="password" required="" id="password" name="password" placeholder="Enter your password">
+        </div>
+        <div class="d-grid mb-0 text-center">
+            <button class="btn btn-primary" type="submit"><i class="mdi mdi-login"></i> Log In </button>
+        </div>
+        <!-- social-->
+        <div class="text-center mt-4">
+            <p class="text-muted font-16">Our Social Networks</p>
+            <ul class="social-list list-inline mt-3">
+                <li class="list-inline-item">
+                    <a href="https://www.facebook.com/mokkaonline.usa" class="social-list-item border-primary text-primary"target="_blank" rel="noopener noreferrer"><i class="mdi mdi-facebook"></i></a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.instagram.com/mokka_school/" class="social-list-item border-danger text-danger"target="_blank" rel="noopener noreferrer"><i class="mdi mdi-instagram"></i></a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.linkedin.com/company/mokka-online" class="social-list-item border-info text-info"target="_blank" rel="noopener noreferrer"><i class="mdi mdi-linkedin"></i></a>
+                </li>
+            </ul>
+        </div>
+    </form>
+    <!-- end form-->
+
+{% endblock content %}

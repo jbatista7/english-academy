@@ -1,0 +1,53 @@
+{% load static %}
+<div class="leftside-menu">
+
+    <!-- LOGO -->
+    <a href="{% url 'schedules:home' %}" class="logo text-center logo-light">
+        <span class="logo-lg">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="37">
+        </span>
+        <span class="logo-sm">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="18">
+        </span>
+    </a>
+
+    <!-- LOGO -->
+    <a href="{% url 'schedules:home' %}" class="logo text-center logo-dark">
+        <span class="logo-lg">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="37">
+        </span>
+        <span class="logo-sm">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="18">
+        </span>
+    </a>
+
+    <div class="h-100" id="leftside-menu-container" data-simplebar="">
+
+        <!--- Sidemenu -->
+        <ul class="side-nav">            
+
+            <li class="side-nav-title side-nav-item">Academy</li>            
+
+            <li class="side-nav-item">
+                <a href="{% url 'schedules:home' %}" aria-expanded="false" aria-controls="sidebarTasks" class="side-nav-link">
+                    <i class="uil-calendar-alt"></i>
+                    <span> Class Schedule </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{% url 'lessons:support-and-sales' %}" class="side-nav-link">
+                    <i class="uil-life-ring"></i>
+                    <span> Support and Sales </span>
+                </a>
+            </li>
+
+        </ul>
+        <!-- End Sidebar -->
+
+        <div class="clearfix"></div>
+
+    </div>
+    <!-- Sidebar -left -->
+
+</div>

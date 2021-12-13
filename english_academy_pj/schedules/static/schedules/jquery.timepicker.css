@@ -1,0 +1,75 @@
+.ui-ctimepicker-wrapper {
+  overflow-y: auto;
+  max-height: 150px;
+  width: 6.5em;
+  background: #fff;
+  border: 1px solid #ddd;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+  z-index: 10052;
+  margin: 0;
+}
+
+.ui-ctimepicker-wrapper.ui-ctimepicker-with-duration {
+  width: 13em;
+}
+
+.ui-ctimepicker-wrapper.ui-ctimepicker-with-duration.ui-ctimepicker-step-30,
+.ui-ctimepicker-wrapper.ui-ctimepicker-with-duration.ui-ctimepicker-step-60 {
+  width: 11em;
+}
+
+.ui-ctimepicker-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-ctimepicker-duration {
+  margin-left: 5px;
+  color: #888;
+}
+
+.ui-ctimepicker-list:hover .ui-ctimepicker-duration {
+  color: #888;
+}
+
+.ui-ctimepicker-list li {
+  padding: 3px 0 3px 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #000;
+  list-style: none;
+  margin: 0;
+}
+
+.ui-ctimepicker-list:hover .ui-ctimepicker-selected {
+  background: #fff;
+  color: #000;
+}
+
+li.ui-ctimepicker-selected,
+.ui-ctimepicker-list li:hover,
+.ui-ctimepicker-list .ui-ctimepicker-selected:hover {
+  background: #1980ec;
+  color: #fff;
+}
+
+li.ui-ctimepicker-selected .ui-ctimepicker-duration,
+.ui-ctimepicker-list li:hover .ui-ctimepicker-duration {
+  color: #ccc;
+}
+
+.ui-ctimepicker-list li.ui-ctimepicker-disabled,
+.ui-ctimepicker-list li.ui-ctimepicker-disabled:hover,
+.ui-ctimepicker-list li.ui-ctimepicker-selected.ui-ctimepicker-disabled {
+  color: #888;
+  cursor: default;
+}
+
+.ui-ctimepicker-list li.ui-ctimepicker-disabled:hover,
+.ui-ctimepicker-list li.ui-ctimepicker-selected.ui-ctimepicker-disabled {
+  background: #f2f2f2;
+}
