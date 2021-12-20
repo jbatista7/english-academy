@@ -8,9 +8,15 @@ User = get_user_model()
 @receiver(post_save, sender=User)
 def post_save_create_profile(sender, instance, created, **kwargs):
     if instance.role == 'teacher':
-        Teacher.objects.update_or_create(user=instance)
+        Teacher.objects.update_or_create(user=instance, id=instance.id)
     elif instance.role == 'student':
-        Student.objects.update_or_create(user=instance)
+        Student.objects.update_or_create(user=instance, id=instance.id)
+
+#     def create_profile(sender, **kwargs):
+#     if kwargs["created"]:
+#         p = Profile(user=kwargs["instance"], ...)
+#         p.save()
+# django.db.models.signals.post_save.connect(create_profile, sender=User)
     # if created:
     #     print(instance.role)
     #     if instance.role == 'teacher':

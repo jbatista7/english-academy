@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-
+from django.dispatch import receiver
+from .utils import generate_custom_id
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -56,6 +57,7 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
@@ -94,6 +96,10 @@ class User(AbstractBaseUser):
         # Simplest possible answer: Yes, always
         return True
 
+    def save(self, *args, **kwargs):
+        self.id = generate_custom_id(self)
+        return super().save(*args, **kwargs)
+
     @property
     def is_staff(self):
         "Is the user a member of staff?"
@@ -105,3 +111,10 @@ class User(AbstractBaseUser):
         return self.admin
 
     objects = UserManager()
+
+# @receiver(models.signals.post_save, sender=User)
+# def user_created(sender, instance, created, **kwargs):
+#     if created:
+#         print(instance.id)
+#         instance.id = generate_custom_id(self)
+#         # User.objects.create(manager=instance)

@@ -108,7 +108,7 @@ def task_view(request, *args, **kwargs):
             'task_qs': task_qs, 
             'pack_qs': purchased_packs,
         }
-        return render(request, 'schedules/task-list.html', context)
+        return render(request, 'schedules/student-task.html', context)
     elif role == 'teacher':
         task_qs = Task.objects.filter(teacher__user_id=user_id)
 
@@ -121,7 +121,7 @@ def task_view(request, *args, **kwargs):
             'task_qs': task_qs, 
         }
         return render(request, 'schedules/teacher-task.html', context)
-    return render(request, 'schedules/task-list.html')
+    return render(request, 'schedules/student-task.html')
 
 @login_required
 @allowed_users(allowed_roles=['student'])

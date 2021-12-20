@@ -179,8 +179,8 @@ finishForm.addEventListener("submit", (e) => {
           window.location.reload();
         }, 2000);
       } else {
-        alertBox.innerHTML = `<div class="alert alert-success" role="alert">
-                 <i class="dripicons-checkmark me-2"></i><strong>failed</strong>. Your booking are in date yet
+        alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                 <i class="dripicons-wrong me-2"></i><strong>fail</strong>. Your booking are in date yet
                                            </div>`;
         setTimeout(() => {
           $("#finish-task-modal").modal("toggle");
