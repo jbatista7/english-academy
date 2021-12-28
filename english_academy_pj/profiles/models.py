@@ -31,7 +31,7 @@ class Student(Profile):
         super(Student, self).delete(*args, **kwargs)
 
     def __str__(self):
-        return str(self.user)
+        return str(f"{self.user.id} - {self.user.full_name()}")
 
     def full_name(self):
         return str(self.user.full_name())

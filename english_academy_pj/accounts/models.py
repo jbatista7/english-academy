@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
 from django.dispatch import receiver
 from .utils import generate_custom_id
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         """
@@ -41,6 +42,8 @@ class UserManager(BaseUserManager):
             email,
             password=password,
         )
+        # user.id = generate_custom_id(user)
+        user.superuser = True
         user.staff = True
         user.admin = True
         user.save(using=self._db)
@@ -62,7 +65,8 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=50)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     is_active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False) # a admin user; non super-user
+    staff = models.BooleanField(default=False, verbose_name='admin') # a admin user; non super-user
+    superuser = models.BooleanField(default=False) # a superuser
     admin = models.BooleanField(default=False) # a superuser
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -84,7 +88,7 @@ class User(AbstractBaseUser):
         return self.email
 
     def __str__(self):
-        return self.email
+        return f"ID: {self.id}"
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -97,8 +101,9 @@ class User(AbstractBaseUser):
         return True
 
     def save(self, *args, **kwargs):
-        self.id = generate_custom_id(self)
-        return super().save(*args, **kwargs)
+        if self.pk is None:
+            self.pk = generate_custom_id(self)
+        super().save(*args, **kwargs)
 
     @property
     def is_staff(self):
@@ -110,11 +115,9 @@ class User(AbstractBaseUser):
         "Is the user a admin member?"
         return self.admin
 
-    objects = UserManager()
+    @property
+    def is_superuser(self):
+        "Is the user a admin member?"
+        return self.superuser
 
-# @receiver(models.signals.post_save, sender=User)
-# def user_created(sender, instance, created, **kwargs):
-#     if created:
-#         print(instance.id)
-#         instance.id = generate_custom_id(self)
-#         # User.objects.create(manager=instance)
+    objects = UserManager()

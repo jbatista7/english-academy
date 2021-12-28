@@ -31,10 +31,10 @@ class TaskAdmin(admin.ModelAdmin):
 
 class PurchasedPackageAdmin(admin.ModelAdmin):
     # actions = None
-    list_display = ['student', 'full_name', 'pack', 'created']
+    list_display = ['student_id', 'full_name', 'pack', 'created']
     # filter_horizontal = ['packs']
     readonly_fields = ['full_name']
-    fields = ['full_name', 'student', 'pack']
+    fields = ['student', 'pack']
     search_fields = ['student__user__first_name', 'student__user__last_name', 'student__user__email']
     # raw_id_fields = ['student']
 
