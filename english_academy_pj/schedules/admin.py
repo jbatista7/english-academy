@@ -9,7 +9,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_filter = ['status']
     search_fields = ['student__user__first_name', 'student__user__last_name', 'student__user__email', 'teacher__user__first_name', 'teacher__user__last_name', 'teacher__user__email']
     # readonly_fields = ['full_name', 'student', 'lesson', 'teacher', 'date', 'status', 'created', 'updated']
-    # raw_id_fields = ['lesson', 'teacher']
+    raw_id_fields = ['student']
     fields = ['student', 'student_full_name', 'lesson_link', 'teacher', 'date', 'status', 'created', 'updated']
 
     # def full_name(self, obj):
@@ -32,11 +32,11 @@ class TaskAdmin(admin.ModelAdmin):
 class PurchasedPackageAdmin(admin.ModelAdmin):
     # actions = None
     list_display = ['student_id', 'full_name', 'pack', 'created']
-    # filter_horizontal = ['packs']
+    # filter_horizontal = ['student_id']
     readonly_fields = ['full_name']
     fields = ['student', 'pack']
     search_fields = ['student__user__first_name', 'student__user__last_name', 'student__user__email']
-    # raw_id_fields = ['student']
+    raw_id_fields = ['student']
 
     # @admin.display()
     # def user_id(self, obj):
