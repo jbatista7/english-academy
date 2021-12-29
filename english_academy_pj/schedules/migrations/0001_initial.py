@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             name='Task',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('lesson_link', models.URLField(blank=True)),
+                ('lesson_link', models.URLField(blank=True, null=True)),
                 ('status', models.CharField(choices=[('active', 'Active'), ('finished', 'Finished')], default='active', max_length=10)),
                 ('date', models.DateTimeField(default=django.utils.timezone.now)),
                 ('created', models.DateTimeField(auto_now_add=True)),

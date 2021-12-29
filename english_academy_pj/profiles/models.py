@@ -23,7 +23,7 @@ class Profile(models.Model):
 class Student(Profile):
     # id = models.field
     avatar = models.ImageField(upload_to='avatars/students', default='avatar.png')
-    balance = models.FloatField(help_text='in US dollars $', default=0.0, blank=True)
+    balance = models.FloatField(help_text='in US dollars $', default=0.0)
 
     def delete(self, *args, **kwargs):
         if os.path.isfile(self.avatar.path):

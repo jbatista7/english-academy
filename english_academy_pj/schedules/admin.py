@@ -5,7 +5,7 @@ from .models import Task, PurchasedPackage
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ['student', 'student_full_name', 'teacher_full_name', 'status', 'date']
-    readonly_fields = ['student_full_name', 'status', 'created', 'updated']
+    readonly_fields = ['student_full_name', 'status', 'created', 'updated', 'lesson_link']
     list_filter = ['status']
     search_fields = ['student__user__first_name', 'student__user__last_name', 'student__user__email', 'teacher__user__first_name', 'teacher__user__last_name', 'teacher__user__email']
     # readonly_fields = ['full_name', 'student', 'lesson', 'teacher', 'date', 'status', 'created', 'updated']

@@ -34,7 +34,7 @@ let selectedLanguage = "";
 let taskId = "";
 let taskStatus = "";
 let totalLessonHours = 0;
-let taskHours = parseInt(taskCount.textContent);
+let taskHours = taskCount !== null ? parseInt(taskCount.textContent) : 0;
 
 let currentTeacher = "";
 let teacherId = "";
