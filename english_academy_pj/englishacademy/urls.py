@@ -32,6 +32,7 @@ urlpatterns = [
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-admin.site.site_header = 'MOKKA Administration'
+admin.site.site_header = 'Dashboard Administration'
 admin.site.index_title = 'Manage the English Academy site'
-admin.site.site_title = 'MOKKA site admin'
+admin.site.site_title = 'Dashboard Administration'
+# admin.site.site_title = 'MOKKA site admin'

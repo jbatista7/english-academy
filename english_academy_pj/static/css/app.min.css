@@ -14943,6 +14943,17 @@ body.authentication-bg .account-pages {
 body.auth-fluid-pages[data-leftbar-compact-mode="condensed"] {
   min-height: 100px;
 }
+
+.heightspace {
+  /* background: #313a46; */
+  height: calc(100vh - 370px);
+}
+
+body[data-leftbar-compact-mode="condensed"] .heightspace {
+  /* background: #313a46; */
+  height: calc(100vh - 470px);
+}
+
 .logout-icon {
   width: 140px;
 }

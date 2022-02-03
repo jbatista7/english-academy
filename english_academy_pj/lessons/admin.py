@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pack, SupportAndSales
+from .models import Pack, SupportAndSales, Magazines
 # Register your models here.
 
 class PackAdmin(admin.ModelAdmin):
@@ -18,5 +18,12 @@ class SupportAndSalesAdmin(admin.ModelAdmin):
             return False
         return super().has_add_permission(request)
 
+class MagazineAdmin(admin.ModelAdmin):
+     def has_add_permission(self, request):
+        if self.model.objects.count() >= MAX_OBJECTS:
+            return False
+        return super().has_add_permission(request)
+
 admin.site.register(Pack, PackAdmin)
 admin.site.register(SupportAndSales, SupportAndSalesAdmin)
+admin.site.register(Magazines)

@@ -50,6 +50,21 @@ function disableDatetimeInput(state) {
     timeInput.removeAttribute("disabled");
   }
 }
+function disableDateInput(state) {
+  if (state) {
+    dateInput.setAttribute("disabled", true);
+  } else {
+    dateInput.removeAttribute("disabled");
+  }
+}
+function disableTimeInput(state) {
+  //state = true or false, true disabled
+  if (state) {
+    timeInput.setAttribute("disabled", true);
+  } else {
+    timeInput.removeAttribute("disabled");
+  }
+}
 
 function disabledWeekDays(enabledDays) {
   let week_days = enabledDays.toString().split(",").map(Number);
@@ -94,22 +109,100 @@ function hoursDisabled(enabledHours) {
   });
 }
 
+$(function () {
+  $(".datepicker")
+    .datepicker({
+      format: "dd/mm/yyyy",
+      startDate: "+1d",
+    })
+    .on("changeDate", function (e) {
+      // `e` here contains the extra attributes
+      if (e.target.value) {
+        timeInput.value = "";
+        disableTimeInput(true);
+        let day = e.date.getDay(); // week day
+        let hours = "";
+
+        switch (day) {
+          case 0:
+            hours = teacherSelect.selectedOptions[0].dataset.sunday;
+            break;
+
+          case 1:
+            hours = teacherSelect.selectedOptions[0].dataset.monday;
+            break;
+
+          case 2:
+            hours = teacherSelect.selectedOptions[0].dataset.tuesday;
+            break;
+
+          case 3:
+            hours = teacherSelect.selectedOptions[0].dataset.wednesday;
+            break;
+
+          case 4:
+            hours = teacherSelect.selectedOptions[0].dataset.thursday;
+            break;
+
+          case 5:
+            hours = teacherSelect.selectedOptions[0].dataset.friday;
+            break;
+
+          case 6:
+            hours = teacherSelect.selectedOptions[0].dataset.saturday;
+            break;
+        }
+
+        //   let hours = e.target.selectedOptions[0].dataset.hours;
+        hoursDisabled(hours);
+        disableTimeInput(false);
+        // console.log(teacherSelect.dataset.monday);
+      }
+    });
+});
+
 teacherSelect.addEventListener("change", (e) => {
   $(".datepicker").datepicker("clearDates", true);
   timeInput.value = "";
-  let hours = e.target.selectedOptions[0].dataset.hours;
-  hoursDisabled(hours);
-  let week_days = e.target.selectedOptions[0].dataset.week_days;
-  //     .split(",")
-  //     .map(Number);
+  //   let hours = e.target.selectedOptions[0].dataset.hours;
+  //   hoursDisabled(hours);
 
-  //   let days = [0, 1, 2, 3, 4, 5, 6];
-  //   let disabled_week_days = days.filter((day) => !week_days.includes(day));
+  let temp_week_days = "";
 
-  //   $(".datepicker").datepicker("setDaysOfWeekDisabled", disabled_week_days);
-  disabledWeekDays(week_days);
+  if (e.target.selectedOptions[0].dataset.sunday) {
+    temp_week_days += "," + "0";
+  }
+  if (e.target.selectedOptions[0].dataset.monday) {
+    temp_week_days += "," + "1";
+  }
+  if (e.target.selectedOptions[0].dataset.tuesday) {
+    temp_week_days += "," + "2";
+  }
+  if (e.target.selectedOptions[0].dataset.wednesday) {
+    temp_week_days += "," + "3";
+  }
+  if (e.target.selectedOptions[0].dataset.thursday) {
+    temp_week_days += "," + "4";
+  }
+  if (e.target.selectedOptions[0].dataset.friday) {
+    temp_week_days += "," + "5";
+  }
+  if (e.target.selectedOptions[0].dataset.saturday) {
+    temp_week_days += "," + "6";
+  }
 
-  disableDatetimeInput(false);
+  temp_week_days = temp_week_days.slice(1);
+  if (temp_week_days) {
+    let week_days = temp_week_days.split(",").map(Number);
+
+    let days = [0, 1, 2, 3, 4, 5, 6];
+    let disabled_week_days = days.filter((day) => !week_days.includes(day));
+
+    $(".datepicker").datepicker("setDaysOfWeekDisabled", disabled_week_days);
+    disabledWeekDays(week_days);
+
+    disableDateInput(false);
+  }
 });
 
 $(document).ready(function () {
@@ -176,23 +269,122 @@ function open_edit_modal(id, lessonNumber, teacherName, teacherUserId) {
               const optionTeacher = document.createElement("OPTION");
               optionTeacher.text = itemT.name;
               optionTeacher.value = itemT.name;
-              optionTeacher.setAttribute("data-week_days", itemT.week_days);
-              optionTeacher.setAttribute("data-hours", itemT.hours);
+              optionTeacher.setAttribute("data-user_id", itemT.user_id);
+
+              optionTeacher.setAttribute("data-sunday", itemT.week_days.sunday);
+              optionTeacher.setAttribute("data-monday", itemT.week_days.monday);
+              optionTeacher.setAttribute(
+                "data-tuesday",
+                itemT.week_days.tuesday
+              );
+              optionTeacher.setAttribute(
+                "data-wednesday",
+                itemT.week_days.wednesday
+              );
+              optionTeacher.setAttribute(
+                "data-thursday",
+                itemT.week_days.thursday
+              );
+              optionTeacher.setAttribute("data-friday", itemT.week_days.friday);
+              optionTeacher.setAttribute(
+                "data-saturday",
+                itemT.week_days.saturday
+              );
               if (itemT.name === currentTeacher) {
                 optionTeacher.setAttribute("selected", true);
-                disabledWeekDays(itemT.week_days);
-                hoursDisabled(itemT.hours);
 
+                let temp_week_days = "";
+
+                if (optionTeacher.dataset.sunday) {
+                  temp_week_days += "," + "0";
+                }
+                if (optionTeacher.dataset.monday) {
+                  temp_week_days += "," + "1";
+                }
+                if (optionTeacher.dataset.tuesday) {
+                  temp_week_days += "," + "2";
+                }
+                if (optionTeacher.dataset.wednesday) {
+                  temp_week_days += "," + "3";
+                }
+                if (optionTeacher.dataset.thursday) {
+                  temp_week_days += "," + "4";
+                }
+                if (optionTeacher.dataset.friday) {
+                  temp_week_days += "," + "5";
+                }
+                if (optionTeacher.dataset.saturday) {
+                  temp_week_days += "," + "6";
+                }
+
+                temp_week_days = temp_week_days.slice(1);
+                if (temp_week_days) {
+                  let week_days = temp_week_days.split(",").map(Number);
+
+                  let days = [0, 1, 2, 3, 4, 5, 6];
+                  let disabled_week_days = days.filter(
+                    (day) => !week_days.includes(day)
+                  );
+
+                  $(".datepicker").datepicker(
+                    "setDaysOfWeekDisabled",
+                    disabled_week_days
+                  );
+                  disabledWeekDays(week_days);
+
+                  disableDateInput(false);
+                }
+                //     hoursDisabled(itemT.hours);
                 let [pDate, pTime] = item.date.split(" ");
                 let pHour = pTime.split(":")[0];
                 let m = pHour >= 12 ? "PM" : "AM";
                 pHour %= 12;
                 pHour = (pHour ? pHour : 12) + ":00 ";
-
                 let pDate1 = pDate.split("/");
                 dateInput.value =
                   pDate1[0] + "/" + pDate1[1] + "/" + "20" + pDate1[2];
                 timeInput.value = pHour + m;
+                let formatDateOld =
+                  pDate1[1] + "/" + pDate1[0] + "/" + "20" + pDate1[2];
+                let d = new Date(formatDateOld);
+                let day = d.getDay(); //week day
+
+                let hours = "";
+
+                // console.log(optionTeacher.dataset.monday);
+
+                switch (day) {
+                  case 0:
+                    hours = optionTeacher.dataset.sunday;
+                    break;
+
+                  case 1:
+                    hours = optionTeacher.dataset.monday;
+                    break;
+
+                  case 2:
+                    hours = optionTeacher.dataset.tuesday;
+                    break;
+
+                  case 3:
+                    hours = optionTeacher.dataset.wednesday;
+                    break;
+
+                  case 4:
+                    hours = optionTeacher.dataset.thursday;
+                    break;
+
+                  case 5:
+                    hours = optionTeacher.dataset.friday;
+                    break;
+
+                  case 6:
+                    hours = optionTeacher.dataset.saturday;
+                    break;
+                }
+
+                hoursDisabled(hours);
+                disableTimeInput(false);
               }
               teacherSelect.appendChild(optionTeacher);
             });
@@ -271,8 +463,14 @@ newBtn.addEventListener("click", (e) => {
               option.text = item.name;
               option.value = item.name;
               option.setAttribute("data-user_id", item.user_id);
-              option.setAttribute("data-week_days", item.week_days);
-              option.setAttribute("data-hours", item.hours);
+
+              option.setAttribute("data-sunday", item.week_days.sunday);
+              option.setAttribute("data-monday", item.week_days.monday);
+              option.setAttribute("data-tuesday", item.week_days.tuesday);
+              option.setAttribute("data-wednesday", item.week_days.wednesday);
+              option.setAttribute("data-thursday", item.week_days.thursday);
+              option.setAttribute("data-friday", item.week_days.friday);
+              option.setAttribute("data-saturday", item.week_days.saturday);
               teacherSelect.appendChild(option);
             });
           },

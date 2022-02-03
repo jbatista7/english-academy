@@ -3,8 +3,6 @@ const finishForm = document.getElementById("finish-form");
 const linkForm = document.getElementById("link-form");
 const linkInput = document.getElementById("new-link");
 const invalidLink = document.getElementById("invalid-link");
-// console.log(linkInput);
-// console.log(invalidLink);
 
 const csrf = document.getElementsByName("csrfmiddlewaretoken");
 
@@ -67,8 +65,6 @@ function task_link(task_id, status) {
       linkInput.classList.add("is-valid");
       linkSpinnerBox.innerHTML =
         '<div class="spinner-border" role="status"></div>';
-      console.log(`Valid link: ${link}`);
-      console.log(`status: ${status}`);
 
       $.ajax({
         type: "POST",
@@ -133,7 +129,7 @@ $(document).ready(function () {
       },
       info: "Showing bookings _START_ to _END_ of _TOTAL_",
       lengthMenu:
-        'Display <select class=\'form-select form-select-sm ms-1 me-1\'><option value="10">10</option><option value="20">20</option><option value="-1">All</option></select> tasks',
+        'Display <select class=\'form-select form-select-sm ms-1 me-1\'><option value="10">10</option><option value="20">20</option><option value="-1">All</option></select> bookings',
     },
     pageLength: 10,
     columns: [

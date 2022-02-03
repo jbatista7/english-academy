@@ -12,9 +12,17 @@ class TeacherAdmin(admin.ModelAdmin):
     list_filter = ['category']
     fieldsets = (
         (None, {
-            'fields': ('user', 'category','avatar',('hours','week_days'), 'phone_number', 'country')
+            'fields': ('user', 'category','avatar', 'phone_number', 'country')
+            # 'fields': ('user', 'category','avatar',('hours','week_days'), 'phone_number', 'country')
         }),
+        ('weekly class schedule', {'fields': (('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),)}),
     )
+
+    # fieldsets = (
+    #     (None, {'fields': ('email', 'password')}),
+    #     ('Personal info', {'fields': ('first_name', 'last_name')}),
+    #     ('Permissions', {'fields': ('staff', 'groups', )}),
+    # )
     ordering = ['user_id']
     
     def has_add_permission(self, request):

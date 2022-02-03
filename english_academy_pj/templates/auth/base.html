@@ -10,7 +10,7 @@
         <meta content="Online English and Spanish Academy" name="description">
         <meta content="MOKKA" name="author">
         <!-- App favicon -->
-        <link rel="shortcut icon" href="assets/images/favicon.ico">
+        <link rel="shortcut icon" href="{% static 'img/cropped-Logo_Mokkaonline-32x32.png' %}">
 
         <!-- App css -->
         <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css">
@@ -20,7 +20,7 @@
 
     </head>
 
-    <body class="authentication-bg pb-0" data-layout-config='{"darkMode":false}'>
+    <body class="loading authentication-bg pb-0" data-layout-config='{"darkMode":false}'>
         {% load photo_tags %}
         {% get_photo as bg %}  
 
@@ -31,14 +31,14 @@
                     <div class="card-body">
 
                         <!-- Logo -->
-                        <div class="auth-brand text-center text-lg-start">
-                            <a href="{% url 'schedules:home' %}" class="logo-dark">
-                                <span><img src="{% static 'img/MOKKAONLINE.png' %}" alt="" height="37"></span>
-                            </a>
-                            <a href="{% url 'schedules:home' %}" class="logo-light">
-                                <span><img src="{% static 'img/MOKKAONLINE.png' %}" alt="" height="37"></span>
-                            </a>
-                        </div>
+                            <div class="auth-brand text-center text-lg-start">
+                                <a href="{% url 'schedules:home' %}" class="logo-dark">
+                                    <span><img src="{% static 'img/MOKKAONLINE.png' %}" alt="" height="37"></span>
+                                </a>
+                                <a href="{% url 'schedules:home' %}" class="logo-light">
+                                    <span><img src="{% static 'img/MOKKAONLINE.png' %}" alt="" height="37"></span>
+                                </a>
+                            </div>
                         <div class="mb-3"></div>
 
                         {% block content %}

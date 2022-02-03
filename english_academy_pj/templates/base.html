@@ -19,22 +19,11 @@
     <link href="{% static 'img/cropped-Logo_Mokkaonline-180x180.png' %}" rel="apple-touch-icon">
     <meta name="msapplication-TileImage" content="{% static 'img/cropped-Logo_Mokkaonline-270x270.png' %}">
 
-    <!-- Quill css -->
-    {% comment %} <link href="{% static 'vendor/css/quill.bubble.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/css/quill.core.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/css/quill.snow.css' %}" rel="stylesheet" type="text/css"> {% endcomment %}
-
     <!-- App css -->
     <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/app.min.css' %}" rel="stylesheet" type="text/css" id="light-style">
     <link href="{% static 'css/app-dark.min.css' %}" rel="stylesheet" type="text/css" id="dark-style">
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
-
-    <!-- third party css -->
-    {% comment %} <link href="{% static 'vendor/css/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet" type="text/css"> {% endcomment %}
-    {% comment %} <link href="{% static 'vendor/css/semantic.min.css' %}" rel="stylesheet" type="text/css"> {% endcomment %}
-    <!-- third party css end -->
-
 
     <!-- extracss -->
     {% block extracss %}
@@ -98,18 +87,6 @@
     <!-- bundle -->
     <script src="{% static 'js/vendor.min.js' %}"></script>
     <script src="{% static 'js/app.min.js' %}"></script>
-    {% comment %} <script src="{% static 'vendor/js/quill.min.js' %}"></script> {% endcomment %}
-
-    <!-- third party js -->
-    {% comment %} <script src="{% static 'vendor/js/apexcharts.min.js' %}"></script>
-    <script src="{% static 'vendor/js/jquery-jvectormap-1.2.2.min.js' %}"></script>
-    <script src="{% static 'vendor/js/jquery-jvectormap-world-mill-en.js' %}"></script> {% endcomment %}
-    {% comment %} <script src="{% static 'vendor/js/semantic.min.js' %}"></script> {% endcomment %}
-    <!-- third party js ends -->
-
-    <!-- custom js -->
-    {% comment %} <script src="{% static 'js/semantic.js' %}"></script> {% endcomment %}
-    <!-- custom js ends -->
 
     {% block extrascripts %}
     {% endblock extrascripts %}

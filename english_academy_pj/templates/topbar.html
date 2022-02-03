@@ -2,7 +2,7 @@
 <div class="navbar-custom">
     <ul class="list-unstyled topbar-menu float-end mb-0">        
         <li class="dropdown notification-list">
-            <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+            <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                 {% load profile_tags %}
                 {% get_profile request as profile %}
                 <span class="account-user-avatar"> 
@@ -17,7 +17,7 @@
                         {{profile.user.full_name}}
                     </span>
                     {% if profile.user.role == 'teacher' %}
-                        <span class="account-position">{{profile.category | capfirst}} Teacher</span>
+                        <span class="account-position">{{profile.category | title}} Teacher</span>
                     {% elif profile.user.role == 'student' %}
                         <span class="account-position">Student</span>
                     {% elif request.user.is_admin %}

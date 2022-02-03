@@ -4,13 +4,12 @@
 {% block title %}List{% endblock title %}
 
 {% block extracss %}
-{% if not request.user.is_admin %}
     <!-- extracss -->
     <link href="{% static 'vendor/css/dataTables.bootstrap5.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'vendor/css/responsive.bootstrap5.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'schedules/jquery.timepicker.min.css' %}" rel="stylesheet" type="text/css">
+    
     <!-- third party css end -->
-{% endif %}
 {% endblock extracss %}
 
 {% block page_title %}
@@ -21,7 +20,6 @@
 
 
 {% block content %}
-{% if not request.user.is_admin %}
 
 <!-- Add New Task MODAL -->
 <div class="modal fade" id="new-task-modal" tabindex="-1">
@@ -135,8 +133,8 @@
                 <div class="modal-body px-4 pb-4 pt-0">
                 <div class="col-12">
                     <div class="mb-3">
-                        <a href="" target="_blank" rel="noopener noreferrer" id="lesson-link">
-                            <span ></span>
+                        <a href="www.linkedin.com/company/mokka-online" target="_blank" rel="noopener noreferrer" id="lesson-link">
+                            <span >jkj</span>
                         </a> 
                     </div>
                 </div>
@@ -185,7 +183,7 @@
                                     {{forloop.counter}} h
                                 </td>
                                 <td>
-                                    {{obj.teacher.category | capfirst}}
+                                    {{obj.teacher.category | title}}
                                 </td>
                                 <td>
                                     {{obj.teacher.full_name | title}}
@@ -222,14 +220,12 @@
 </div>
 <!-- end row -->
 
-{% endif %}
 
 
 {% endblock content %}
 
 
 {% block extrascripts %}
-{% if not request.user.is_admin %}
 
 <!-- third party js -->
 <script src="{% static 'vendor/js/jquery.dataTables.min.js' %}"></script>
@@ -240,16 +236,11 @@
 <script src="{% static 'vendor/js/dataTables.checkboxes.min.js' %}"></script>
 
 <!-- Timepicker -->
-<script src="{% static 'schedules/jquery.timepicker.min.js' %}" defer></script>
-{% comment %} https://cdn.jsdelivr.net/npm/timepicker/ {% endcomment %}
-{% comment %} https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.js {% endcomment %}
-{% comment %} https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.css {% endcomment %}
-<script src="{% static 'schedules/timepicker.js' %}" defer></script>
-<script src="{% static 'schedules/customdatepicker.js' %}" defer></script>
+<script src="{% static 'schedules/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'schedules/custom_timepicker.js' %}"></script>
 
-<script src="{% static 'schedules/student-tasks.js' %}" defer></script>
+<script src="{% static 'schedules/student-tasks.js' %}"></script>
 
-{% endif %}
 
 
 {% endblock extrascripts %}

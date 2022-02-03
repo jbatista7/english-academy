@@ -1,11 +1,18 @@
+from tabnanny import verbose
 from django.db import models
 # Create your models here.
 
 class Pack(models.Model):
-    LANGUAGE_CHOICES = [
-        ('english', 'English'),
-        ('spanish', 'Spanish'),
-    ]
+    LANGUAGE_CHOICES = (
+        ('english_adults', 'English_Adults'),
+        ('english_children', 'English_Children'),
+        ('español_adults', 'Español_Adults'),
+        ('español_children', 'Español_Children'),
+    )
+    # LANGUAGE_CHOICES = [
+    #     ('english', 'English'),
+    #     ('spanish', 'Spanish'),
+    # ]
 
     # LEVEL_CHOICES = [
     #     ('a1', 'A1'),
@@ -19,7 +26,7 @@ class Pack(models.Model):
     # ]
 
     name = models.CharField(max_length=200)
-    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
+    language = models.CharField(max_length=20, choices=LANGUAGE_CHOICES)
     number_of_lessons = models.PositiveSmallIntegerField()
     package_price = models.DecimalField(help_text='in US dollars $', max_digits=6, default=0.0, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
@@ -34,10 +41,23 @@ class Pack(models.Model):
 
 class SupportAndSales(models.Model):
     name = models.CharField(max_length=100)
-    supportUrl = models.URLField()
+    supportUrl = models.URLField(verbose_name='link')
 
     class Meta:
         verbose_name_plural = 'Support and sales'
 
     def __str__(self):
         return str(self.name)
+
+
+class Magazines(models.Model):
+    name = models.CharField(max_length=100)
+    magazineUrl = models.URLField(verbose_name='link')
+
+    class Meta:
+        verbose_name_plural = 'Magazines'
+
+    def __str__(self):
+        return str(self.name)
+
+    

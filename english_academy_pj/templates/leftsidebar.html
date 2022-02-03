@@ -4,7 +4,7 @@
     <!-- LOGO -->
     <a href="{% url 'schedules:home' %}" class="logo text-center logo-light">
         <span class="logo-lg">
-            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="37">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="47">
         </span>
         <span class="logo-sm">
             <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="18">
@@ -14,10 +14,10 @@
     <!-- LOGO -->
     <a href="{% url 'schedules:home' %}" class="logo text-center logo-dark">
         <span class="logo-lg">
-            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="37">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="logo" height="47">
         </span>
         <span class="logo-sm">
-            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="" height="18">
+            <img src="{% static 'img/Mokkaonline_logo2021.png' %}" alt="logo" height="18">
         </span>
     </a>
 
@@ -42,12 +42,38 @@
                 </a>
             </li>
 
+            <li class="side-nav-item">
+                <a href="{% url 'lessons:magazines' %}" class="side-nav-link">
+                    <i class="uil-book-open"></i>
+                    <span> Magazine </span>
+                </a>
+            </li>
+
         </ul>
         <!-- End Sidebar -->
+        <div class="heightspace">
+        </div>
+
+        <!-- social-->
+        <div class="text-center mt-4">
+            {% comment %} <p class="text-muted font-16">Our Social Networks</p> {% endcomment %}
+            <ul class="social-list list-inline mt-3">
+                <li class="list-inline-item mb-3">
+                    <a href="https://www.facebook.com/mokkaonline.usa" class="social-list-item border-primary text-primary" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-facebook"></i></a>
+                </li>
+                <li class="list-inline-item mb-3">
+                    <a href="https://www.instagram.com/mokka_school/" class="social-list-item border-danger text-danger" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-instagram"></i></a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.linkedin.com/company/mokka-online" class="social-list-item border-info text-info" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-linkedin"></i></a>
+                </li>
+            </ul>
+        </div>
 
         <div class="clearfix"></div>
 
+
     </div>
     <!-- Sidebar -left -->
-
 </div>
+

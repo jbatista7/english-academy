@@ -17,8 +17,8 @@ class AuthBg(models.Model):
     photo = models.ImageField(upload_to='photos')
 
     class Meta:
-        verbose_name = 'Auth Photos'
-        verbose_name_plural = 'Auth Photos'
+        verbose_name = 'Photos'
+        verbose_name_plural = 'Photos'
         ordering = ['week_day']
 
     def __str__(self):

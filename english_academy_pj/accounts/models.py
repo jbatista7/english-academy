@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
+    BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 from django.dispatch import receiver
 from .utils import generate_custom_id
+
+from django.contrib.auth.models import Group, Permission
 
 
 class UserManager(BaseUserManager):
@@ -50,7 +52,7 @@ class UserManager(BaseUserManager):
         return user
         
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('student', 'Student'),
         ('teacher', 'Teacher'),
@@ -63,13 +65,15 @@ class User(AbstractBaseUser):
     
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, blank=True)
     is_active = models.BooleanField(default=True)
+    # staff = models.BooleanField(default=False) # a admin user; non super-user
     staff = models.BooleanField(default=False, verbose_name='admin') # a admin user; non super-user
     superuser = models.BooleanField(default=False) # a superuser
     admin = models.BooleanField(default=False) # a superuser
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
     
     # notice the absence of a "Password field", that is built in.
 
@@ -90,10 +94,10 @@ class User(AbstractBaseUser):
     def __str__(self):
         return f"ID: {self.id}"
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
+    # def has_perm(self, perm, obj=None):
+    #     "Does the user have a specific permission?"
+    #     # Simplest possible answer: Yes, always
+    #     return True
 
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
@@ -121,3 +125,17 @@ class User(AbstractBaseUser):
         return self.superuser
 
     objects = UserManager()
+
+    
+
+    # class Meta:
+         
+    #     permissions = (
+    #         ("can_go_in_non_ac_bus", "To provide non-AC Bus facility"),
+    #         ("can_go_in_ac_bus", "To provide AC-Bus facility"),
+    #         ("can_stay_ac-room", "To provide staying at AC room"),
+    #         # ("can_stay_ac-room", "To provide staying at Non-AC room"),
+    #         ("can_go_dehradoon", "Trip to Dehradoon"),
+    #         ("can_go_mussoorie", "Trip to Mussoorie"),
+    #         ("can_go_haridwaar", "Trip to Haridwaar"),
+    #         ("can_go_rishikesh", "Trip to Rishikesh"),)

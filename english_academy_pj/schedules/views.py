@@ -4,16 +4,13 @@ from django.contrib.auth.decorators import login_required
 from .models import Task, PurchasedPackage
 from lessons.models import Pack
 from profiles.models import Teacher, Student
-import pytz
 import datetime
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
-from django.db.models import Prefetch
 from django.contrib.auth import get_user_model
 from .decorators import allowed_users
 
-from django.db.models import Count
 # from math import copysign
 
 
@@ -83,7 +80,7 @@ def get_task_view(request, *args, **kwargs):
     return JsonResponse({'data': data})
 
 @login_required
-# @allowed_users(allowed_roles=['student', 'teacher'])
+@allowed_users(allowed_roles=['student', 'teacher'])
 def task_view(request, *args, **kwargs):
     role = request.user.get_role()
     user_id = request.user.id
@@ -111,11 +108,6 @@ def task_view(request, *args, **kwargs):
         return render(request, 'schedules/student-task.html', context)
     elif role == 'teacher':
         task_qs = Task.objects.filter(teacher__user_id=user_id)
-
-        # student_list = list(set(task_qs.values_list('student', flat=True)))
-        # ts = task_qs.values('student').annotate(count=Count('id')).order_by()
-
-        # duplicate_students = Task.objects.values('student').annotate(student_count=Count('student')).filter(student_count__gt=1)
 
         context = {
             'task_qs': task_qs, 
@@ -163,8 +155,18 @@ def get_json_teachers_data(request, *args, **kwargs):
         obj_teachers.append({
             "user_id": person.user.id,
             "name": person.full_name(),
-            "week_days": person.week_days,
-            "hours": person.hours
+            "week_days":
+                {
+                    "sunday": person.sunday,
+                    "monday": person.monday,
+                    "tuesday": person.tuesday,
+                    "wednesday": person.wednesday,
+                    "thursday": person.thursday,
+                    "friday": person.friday,
+                    "saturday": person.saturday,
+                }
+            ,
+            # "hours": person.hours
             })
     return JsonResponse({'data':obj_teachers})
 
@@ -178,24 +180,14 @@ def update_task(request, pk):
         today = datetime.date.today()
         time_diference = (old_date - today).days
         if status == 'active':
-            # taskTimezone = request.POST.get('timezone')
-            # teacher_full_name = request.POST.get('teacher')
             teacher_user_id = request.POST.get('teacher_user_id')
-            # language = request.POST.get('language')
-            # teachers = Teacher.objects.filter(category=language)
-            # for person in teachers:
-            #     if teacher_full_name == person.full_name():
-            #         teacher_user_id = person.user.id
             new_teacher = Teacher.objects.get(user_id=teacher_user_id)
             new_date = request.POST.get('date')
-            # tzname = pytz.timezone(taskTimezone)
             new_date_aware = timezone.make_aware(parse_datetime(new_date), timezone=timezone.utc)
             task = Task.objects.filter(teacher=new_teacher, date=new_date_aware)
             if task:
                 return JsonResponse({'updated': False, 'message': 'exists'}, safe=False)
             
-            # one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
-            # time0 = datetime.timedelta(hours=0, minutes=0, seconds=0)
             if time_diference <= 1 and time_diference >= -1:
                 return JsonResponse({
                     'msg':'Cannot change this booking, less than 24h'
@@ -252,8 +244,6 @@ def delete_task(request, pk):
         time_diference = (old_date - today).days
 
         if status == 'active':
-            # one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
-            # time0 = datetime.timedelta(hours=0, minutes=0, seconds=0)
             if time_diference <= 1 and time_diference >= -1: #can't delete task 24h before and 24h later
                 return JsonResponse({ 
                     'msg':'Cannot delete this booking, less than 24h'
@@ -270,27 +260,14 @@ def delete_task(request, pk):
             else:
                 obj.delete()
                 return JsonResponse({})
-        # else:
-            # time0 = datetime.timedelta(hours=0)
-            # one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
-            # days30 = datetime.timedelta(days=30, hours=23, minutes=59, seconds=59)
-        
-            # obj.delete()
 
 @login_required
 @allowed_users(allowed_roles=['student'])
 def create_task(request):
     if request.is_ajax():
         user_id = request.POST.get('user_id')
-        # language = request.POST.get('language')
         student_obj = Student.objects.get(user_id=user_id)
-        # teacher_full_name = request.POST.get('teacher')
         teacher_user_id = request.POST.get('teacher_user_id')
-        # print(teacher_user_id)
-        # teachers = Teacher.objects.filter(category=language)
-        # for person in teachers:
-        #     if teacher_full_name == person.full_name():
-        #         teacher_user_id = person.user.id
         teacher_obj = Teacher.objects.get(user_id=teacher_user_id)        
         date_obj = request.POST.get('date')
         new_date_aware = timezone.make_aware(parse_datetime(date_obj), timezone=timezone.utc)

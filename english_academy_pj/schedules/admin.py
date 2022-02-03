@@ -7,10 +7,10 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ['student', 'student_full_name', 'teacher_full_name', 'status', 'date']
     readonly_fields = ['student_full_name', 'status', 'created', 'updated', 'lesson_link']
     list_filter = ['status']
-    search_fields = ['student__user__first_name', 'student__user__last_name', 'student__user__email', 'teacher__user__first_name', 'teacher__user__last_name', 'teacher__user__email']
+    search_fields = ['student_id', 'student__user__first_name', 'student__user__last_name', 'student__user__email', 'teacher__user__first_name', 'teacher__user__last_name', 'teacher__user__email']
     # readonly_fields = ['full_name', 'student', 'lesson', 'teacher', 'date', 'status', 'created', 'updated']
     raw_id_fields = ['student']
-    fields = ['student', 'student_full_name', 'lesson_link', 'teacher', 'date', 'status', 'created', 'updated']
+    # fields = ['student', 'student_full_name', 'lesson_link', 'teacher', 'date', 'status', 'created', 'updated']
 
     # def full_name(self, obj):
     #     return obj.student.user.full_name()
@@ -33,6 +33,7 @@ class PurchasedPackageAdmin(admin.ModelAdmin):
     # actions = None
     list_display = ['student_id', 'full_name', 'pack', 'created']
     # filter_horizontal = ['student_id']
+    list_filter = ['pack']
     readonly_fields = ['full_name']
     fields = ['student', 'pack']
     search_fields = ['student__user__first_name', 'student__user__last_name', 'student__user__email']
