@@ -13,9 +13,4 @@ def get_profile(request):
     else:
         return None
 
-@register.simple_tag
-def get_week_days(user_id):
-    week_days = Teacher.objects.get(user_id=user_id).week_days
-    for op in week_days:
-        print(op)
-    print(week_days)
+

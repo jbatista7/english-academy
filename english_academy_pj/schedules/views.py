@@ -47,6 +47,7 @@ def task_data_view(request):
     task_qs = Task.objects.filter(student__user_id=user_id)    
     data = []
     for task in task_qs:
+        print(task.id)
         item = {
             'id': task.id,
             'pack': task.pack.name,
@@ -68,6 +69,7 @@ def get_task_view(request, *args, **kwargs):
     task_qs = Task.objects.filter(student__user_id=user_id, id=task_id)
     data = []
     for task in task_qs:
+        print(task.id)
         item = {
             'id': task.id,
             'language': task.teacher.category,
@@ -85,18 +87,32 @@ def task_view(request, *args, **kwargs):
     role = request.user.get_role()
     user_id = request.user.id
     if role == 'student':
-        task_qs = Task.objects.filter(student__user_id=user_id)
-        for obj in task_qs:
+        active_task_count = 0
+        for obj in Task.objects.filter(student__user_id=user_id):
             status = obj.status
             old_date = obj.date.date()
             today = datetime.date.today()
             time_diference = (old_date - today).days
         
             if status == 'active':
-                if time_diference < -1:
+                if time_diference < -2: #delete the booking after two days without taking the class
                     obj.delete()
         
-        purchased_packs = PurchasedPackage.objects.filter(student__user_id=user_id)
+        # get balance for reminder 
+        purchased_packs = PurchasedPackage.objects.filter(student__user_id=request.user.id)
+        task_amount = Task.objects.filter(student__user_id=request.user.id).count()
+        balance = 0
+        for p in purchased_packs:
+            balance += p.pack.number_of_lessons
+
+        if balance < task_amount:
+            balance = 0
+        else:
+            balance -= task_amount
+         # end get balance for reminder
+        
+        task_qs = Task.objects.filter(student__user_id=user_id)
+        purchased_packs = PurchasedPackage.objects.filter(student__user_id=user_id)  
         
         # pack_qs = None
         # for p in purchased_packs:
@@ -104,9 +120,19 @@ def task_view(request, *args, **kwargs):
         context = {
             'task_qs': task_qs, 
             'pack_qs': purchased_packs,
+            'balance': balance,
         }
         return render(request, 'schedules/student-task.html', context)
     elif role == 'teacher':
+        for obj in Task.objects.filter(teacher__user_id=user_id):
+            status = obj.status
+            old_date = obj.date.date()
+            today = datetime.date.today()
+            time_diference = (old_date - today).days
+        
+            if status == 'active':
+                if time_diference < -2: #delete the booking after two days without taking the class
+                    obj.delete()
         task_qs = Task.objects.filter(teacher__user_id=user_id)
 
         context = {
@@ -244,7 +270,7 @@ def delete_task(request, pk):
         time_diference = (old_date - today).days
 
         if status == 'active':
-            if time_diference <= 1 and time_diference >= -1: #can't delete task 24h before and 24h later
+            if time_diference <= 1 and time_diference >= -2: #can't delete task 24h before and 24h later, -2 has to be task_view -2
                 return JsonResponse({ 
                     'msg':'Cannot delete this booking, less than 24h'
                     })
@@ -253,13 +279,16 @@ def delete_task(request, pk):
                 return JsonResponse({})
 
         elif status == 'finished':
-            if time_diference < -30: #can delete after 30 days
-                return JsonResponse({
-                    'msg':'Cannot delete this booking, less than 30 days.'
+            return JsonResponse({
+                    'msg':'This booking is finished.'
                     })
-            else:
-                obj.delete()
-                return JsonResponse({})
+            # if time_diference < -30: #can delete after 30 days
+            #     return JsonResponse({
+            #         'msg':'Cannot delete this booking, less than 30 days.'
+            #         })
+            # else:
+            #     obj.delete()
+            #     return JsonResponse({})
 
 @login_required
 @allowed_users(allowed_roles=['student'])

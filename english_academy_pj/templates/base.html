@@ -61,6 +61,37 @@
                         </div>
                     </div>
 
+                     <!-- Show purchase reminder MODAL -->
+                     {% if request.user.role == 'student' %}
+                        {% load balance_tags %}
+                        {% get_balance_percent request.user.id as percent %}
+                        {{ percent|json_script:"user_booking_percent" }}
+                     {% endif %}
+                    <div class="modal fade" id="purchase-reminder-modal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                    <div class="modal-header py-3 px-4 border-bottom-0">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body px-4 pb-4 pt-0">
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            Your lessons are running out, go to support and sales for more.
+                                        </div>
+                                        {% comment %} <a href="www.linkedin.com/company/mokka-online" target="_blank" rel="noopener noreferrer" id="lesson-link">
+                                            <button type="submit" class="btn btn-success">Support and Sales</button>
+                                        </a>  {% endcomment %}
+                                        <a href="{% url 'lessons:support-and-sales' %}">
+                                            <button type="submit" class="btn btn-success">Support and Sales</button>
+                                        </a> 
+                                    </div>
+                                </div>
+                            </div> <!-- end modal-content-->
+                        </div> <!-- end modal dialog-->
+                    </div>
+                    <!-- end modal-->
+
+
                     {% block content %}
                     {% endblock content %}
 
@@ -87,6 +118,9 @@
     <!-- bundle -->
     <script src="{% static 'js/vendor.min.js' %}"></script>
     <script src="{% static 'js/app.min.js' %}"></script>
+    {% if request.user.role == 'student' %}
+        <script src="{% static 'js/purchase_reminder.js' %}"></script>
+    {% endif %}
 
     {% block extrascripts %}
     {% endblock extrascripts %}

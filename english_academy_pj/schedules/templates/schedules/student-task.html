@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}List{% endblock title %}
+{% block title %}list{% endblock title %}
 
 {% block extracss %}
     <!-- extracss -->
@@ -144,6 +144,28 @@
 </div>
 <!-- end modal-->
 
+{% comment %} {% if active_task_count %} {% endcomment %}
+    <!-- Show purchase reminder MODAL -->
+    <div class="modal fade" id="purchase-reminder-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header py-3 px-4 border-bottom-0">
+                        <h5 class="modal-title" id="purchase-reminder-modal-title">Lesson link</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body px-4 pb-4 pt-0">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            Your lessons are running out, go to support and sales for more.
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end modal-content-->
+        </div> <!-- end modal dialog-->
+    </div>
+    <!-- end modal-->
+{% comment %} {% endif %} {% endcomment %}
+
 
 <div class="row">
     <div class="col-12">
@@ -202,12 +224,12 @@
                                 </td>
                                 <td>
                                     {% comment %} <a href="{{obj.lesson_link}}" class="action-icon" target="_blank" rel="noopener noreferrer" title="lesson link"> <i class="mdi mdi-eye"></i></a> {% endcomment %}
-                                    <a href="javascript:void(0);" class="action-icon" onclick="show_lesson_link('{{obj.lesson_link}}')"> <i class="mdi mdi-eye"></i></a>
                                     {% if obj.status == 'active' %}
+                                        <a href="javascript:void(0);" class="action-icon" onclick="show_lesson_link('{{obj.lesson_link}}')"> <i class="mdi mdi-eye"></i></a>
                                         <a href="javascript:void(0);" class="action-icon" onclick="open_edit_modal('{{obj.id}}', '{{forloop.counter}}', '{{obj.teacher.full_name}}', '{{obj.teacher.user.id}}');"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                        <a href="javascript:void(0);" class="action-icon" onclick="delete_modal('{{obj.id}}', '{{obj.status}}');"> <i
+                                                class="mdi mdi-delete"></i></a>
                                     {% endif %}                                    
-                                    <a href="javascript:void(0);" class="action-icon" onclick="delete_modal('{{obj.id}}', '{{obj.status}}');"> <i
-                                            class="mdi mdi-delete"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

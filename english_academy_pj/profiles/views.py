@@ -1,3 +1,4 @@
+from schedules.views import task_data_view
 from django.contrib.auth.decorators import login_required
 from schedules.decorators import allowed_users
 from django.shortcuts import render
@@ -27,12 +28,17 @@ def profile_view(request):
         for p in purchased_packs:
             qs_packs = p.pack
             balance += p.pack.number_of_lessons
+
+        if balance < task_amount:
+            balance = 0
+        else:
+            balance -= task_amount
         
         context = {
             'qs_profile': qs_profile,
             'qs_packs': purchased_packs,
             'task_amount': task_amount,
-            'balance': balance - task_amount,
+            'balance': balance,
         }
         return render(request, 'profiles/student-profile.html', context)
     elif profile.role == 'teacher':

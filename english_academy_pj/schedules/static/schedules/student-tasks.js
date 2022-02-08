@@ -413,6 +413,7 @@ function delete_modal(id, status) {
   taskId = id;
   taskStatus = status;
   $("#delete-task-modal").modal("show");
+  $("#purchase-reminder-modal").modal("show");
 }
 
 const convertTime12to24 = (time12h) => {
