@@ -15,10 +15,12 @@ def get_balance_percent(user_id):
 
     for p in purchased_packs:
         balance += p.pack.number_of_lessons
-
-    percent = (100 * finished) / balance
-
-    if (balance - finished) <= 1 and percent < 90:
+    try:
+        percent = (100 * finished) / balance
+        if (balance - finished) <= 1 and percent < 90:
+            percent = 90
+    except:
         percent = 90
+
 
     return percent
