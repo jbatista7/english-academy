@@ -22,5 +22,4 @@ def get_balance_percent(user_id):
     except:
         percent = 90
 
-
     return percent

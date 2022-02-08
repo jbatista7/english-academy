@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'lessons',
     'schedules',
     'accounts',
-    'authbg',
+    'backgrounds.apps.BackgroundsConfig',
     'multiselectfield',
 ]
 
