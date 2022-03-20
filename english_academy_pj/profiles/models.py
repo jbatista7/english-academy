@@ -1,6 +1,7 @@
 from django.db import models
 from multiselectfield import MultiSelectField
 # from users.models import CustomUser
+from lessons.models import Category
 from django.contrib.auth import get_user_model
 import os
 
@@ -8,6 +9,7 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # email_confirmed = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=12, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -84,7 +86,8 @@ class Teacher(Profile):
     )
     
     avatar = models.ImageField(upload_to='avatars/teachers', default='avatar.png')
-    category = models.CharField(max_length=20, choices=LANGUAGE_CHOICES)
+    # category = models.CharField(max_length=50, choices=LANGUAGE_CHOICES)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     sunday = MultiSelectField(choices=HOURS_CHOICES, verbose_name='Sunday', blank=True, null=True)
     monday = MultiSelectField(choices=HOURS_CHOICES, verbose_name='Monday', blank=True, null=True)
     tuesday = MultiSelectField(choices=HOURS_CHOICES, verbose_name='Tuesday', blank=True, null=True)

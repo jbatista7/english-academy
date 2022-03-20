@@ -1,9 +1,36 @@
 from django.contrib import admin
 from .models import Task, PurchasedPackage
 
+from import_export import fields, resources
+from import_export.admin import ExportActionMixin
+from import_export.widgets import ForeignKeyWidget
+
+
 # Register your models here.
 
-class TaskAdmin(admin.ModelAdmin):
+class TaskResource(resources.ModelResource):
+
+    full_name = fields.Field()
+
+    # teacher = fields.Field(
+    #     column_name='teacher',
+    #     attribute='teacher',
+    #     widget=ForeignKeyWidget(Task, 'user__first_name'))
+    # teacher = fields.Field(
+    #     column_name='teacher',
+    #     attribute='teacher',
+    #     widget=ForeignKeyWidget(Task, 'user__first_name'))
+
+    class Meta:
+        model = Task
+        fields = ('teacher', 'status', 'date')
+        export_order = ('teacher' , 'full_name', 'status', 'date')
+
+    def dehydrate_full_name(self, Task):
+        return f'{Task.teacher.user.first_name} {Task.teacher.user.last_name}'
+
+class TaskAdmin(ExportActionMixin, admin.ModelAdmin):
+    resource_class = TaskResource
     list_display = ['student', 'student_full_name', 'teacher_full_name', 'status', 'date']
     readonly_fields = ['student_full_name', 'status', 'created', 'updated', 'lesson_link']
     list_filter = ['status']

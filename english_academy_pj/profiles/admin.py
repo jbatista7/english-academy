@@ -17,12 +17,7 @@ class TeacherAdmin(admin.ModelAdmin):
         }),
         ('weekly class schedule', {'fields': (('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),)}),
     )
-
-    # fieldsets = (
-    #     (None, {'fields': ('email', 'password')}),
-    #     ('Personal info', {'fields': ('first_name', 'last_name')}),
-    #     ('Permissions', {'fields': ('staff', 'groups', )}),
-    # )
+    
     ordering = ['user_id']
     
     def has_add_permission(self, request):

@@ -2,6 +2,18 @@ from tabnanny import verbose
 from django.db import models
 # Create your models here.
 
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'categories'
+
+    def __str__(self):
+        return str(self.name)
+    
+
+
 class Pack(models.Model):
     LANGUAGE_CHOICES = (
         ('english_adults', 'English_Adults'),
@@ -26,7 +38,7 @@ class Pack(models.Model):
     # ]
 
     name = models.CharField(max_length=200)
-    language = models.CharField(max_length=20, choices=LANGUAGE_CHOICES)
+    language = models.ForeignKey(Category, on_delete=models.CASCADE)
     number_of_lessons = models.PositiveSmallIntegerField()
     package_price = models.DecimalField(help_text='in US dollars $', max_digits=6, default=0.0, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)

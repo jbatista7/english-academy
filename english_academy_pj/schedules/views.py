@@ -1,3 +1,4 @@
+from operator import sub
 from englishacademy.settings import ALLOWED_HOSTS
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,10 @@ from .decorators import allowed_users
 
 
 User = get_user_model()
+
+one_day = datetime.timedelta(days=1)
+# one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
+
 
 # Create your views here.
 
@@ -47,7 +52,7 @@ def task_data_view(request):
     task_qs = Task.objects.filter(student__user_id=user_id)    
     data = []
     for task in task_qs:
-        print(task.id)
+        # print(task.id)
         item = {
             'id': task.id,
             'pack': task.pack.name,
@@ -68,11 +73,11 @@ def get_task_view(request, *args, **kwargs):
     user_id = request.user.id
     task_qs = Task.objects.filter(student__user_id=user_id, id=task_id)
     data = []
+    # print(task_id)    
     for task in task_qs:
-        print(task.id)
         item = {
             'id': task.id,
-            'language': task.teacher.category,
+            'language': str(task.teacher.category),
             'lesson_link': task.lesson_link,
             'teacher': task.teacher.user.full_name(),
             'date': task.date.strftime('%d/%m/%y %H:%M'),
@@ -85,17 +90,29 @@ def get_task_view(request, *args, **kwargs):
 @allowed_users(allowed_roles=['student', 'teacher'])
 def task_view(request, *args, **kwargs):
     role = request.user.get_role()
+    # user_last_login = User.objects.get(email=request.user.email).last_login
+    # user_date_joined = User.objects.get(email=request.user.email).created
+    # print(user_date_joined)
+    
+    # print(user_last_login)
+    from django.utils import timezone
+
+    today = timezone.now()
     user_id = request.user.id
     if role == 'student':
         active_task_count = 0
         for obj in Task.objects.filter(student__user_id=user_id):
             status = obj.status
-            old_date = obj.date.date()
-            today = datetime.date.today()
-            time_diference = (old_date - today).days
-        
+            old_date = obj.date
+            # old_date = obj.date.date()
+            # today = datetime.date.today()
+
+            time_diference = (old_date - today)
+            # time_diference = (obj.date - obj.updated)
+            print(time_diference)
+            print(f'diferenc {old_date - today}')
             if status == 'active':
-                if time_diference < -2: #delete the booking after two days without taking the class
+                if time_diference < one_day: #delete the booking after one day without taking the class
                     obj.delete()
         
         # get balance for reminder 
@@ -126,12 +143,12 @@ def task_view(request, *args, **kwargs):
     elif role == 'teacher':
         for obj in Task.objects.filter(teacher__user_id=user_id):
             status = obj.status
-            old_date = obj.date.date()
-            today = datetime.date.today()
-            time_diference = (old_date - today).days
+            # old_date = obj.date.date()
+            # today = datetime.date.today()
+            time_diference = (old_date - today)
         
             if status == 'active':
-                if time_diference < -2: #delete the booking after two days without taking the class
+                if time_diference < one_day: #delete the booking after one day without taking the class
                     obj.delete()
         task_qs = Task.objects.filter(teacher__user_id=user_id)
 
@@ -151,11 +168,11 @@ def get_json_pack_data(request):
     for p in purchased_packs:
         item = {
             'id': p.pack.id,
-            'language': p.pack.language,
+            'language': str(p.pack.language),
             'number_of_lessons': p.pack.number_of_lessons,
         }
         data.append(item)
-        # qs_val = list(p.packs.values())
+        # # qs_val = list(p.packs.values())
     return JsonResponse({'data': data})
     # return JsonResponse({'data':list(purchased_packs.values())})
 
@@ -174,7 +191,7 @@ def get_json_lessons_data(request, *args, **kwargs):
 def get_json_teachers_data(request, *args, **kwargs):
     teacher_category = kwargs.get('category')
 
-    teachers = Teacher.objects.filter(category=teacher_category)
+    teachers = Teacher.objects.filter(category__name='English_Adults')
     
     obj_teachers = []
     for person in teachers:
@@ -205,6 +222,9 @@ def update_task(request, pk):
         old_date = obj.date.date()
         today = datetime.date.today()
         time_diference = (old_date - today).days
+        time_diference = (old_date - today).days
+        # one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
+        # print(one_day)
         if status == 'active':
             teacher_user_id = request.POST.get('teacher_user_id')
             new_teacher = Teacher.objects.get(user_id=teacher_user_id)
@@ -214,9 +234,9 @@ def update_task(request, pk):
             if task:
                 return JsonResponse({'updated': False, 'message': 'exists'}, safe=False)
             
-            if time_diference <= 1 and time_diference >= -1:
+            if time_diference <= 2 and time_diference >= -1:
                 return JsonResponse({
-                    'msg':'Cannot change this booking, less than 24h'
+                    'msg':'Cannot change this booking, less than 48h'
                     })
             # elif old_date - now <= one_day:
             else:
@@ -246,17 +266,21 @@ def finish_task(request, pk):
     old_date = obj.date.date()
     today = datetime.date.today()
     time_diference = (old_date - today).days
+    # hour_difference = obj.date.replace(tzinfo=None) - datetime.datetime.now()
+
     if request.is_ajax():
-        if time_diference <= 0:
+        if time_diference < 0: 
             obj.status = 'finished'
-            obj.save()
-            return JsonResponse({
-                'status': obj.status,
-                })
-        else:
-            return JsonResponse({
-                'status': obj.status,
-                })
+            obj.save()            
+        elif time_diference == 0:
+            if obj.date.hour > datetime.datetime.now().hour: 
+
+                obj.status = 'finished'
+                obj.save()                
+        
+        return JsonResponse({
+            'status': obj.status,
+            })
 
 @login_required
 @allowed_users(allowed_roles=['student'])
@@ -324,7 +348,6 @@ def task_link(request, pk):
                     'msg':'expired'
                     })
             else:
-                print('save')
                 obj.lesson_link = link
                 obj.save()
                 return JsonResponse({})

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'backgrounds.apps.BackgroundsConfig',
     'multiselectfield',
+    'import_export',
 ]
 
 MIDDLEWARE = [

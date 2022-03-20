@@ -15019,8 +15019,9 @@ body[data-leftbar-compact-mode="condensed"] .heightspace {
 }
 @media (min-width: 992px) {
   .auth-brand {
-    position: absolute;
-    top: 3rem;
+    /* position: absolute;
+    top: 3rem; */
+    margin-bottom: 3rem !important;
   }
 }
 @media (max-width: 991.98px) {

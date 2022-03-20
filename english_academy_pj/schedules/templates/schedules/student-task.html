@@ -29,7 +29,7 @@
                 <div class="modal-header py-3 px-4 border-bottom-0">
                     <h5 class="modal-title" id="task-modal-title">New booking</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                </div>                
                 <div class="modal-body px-4 pb-4 pt-0">
                 <div id="spinner-box" class="text-center">
                     
@@ -134,7 +134,7 @@
                 <div class="col-12">
                     <div class="mb-3">
                         <a href="www.linkedin.com/company/mokka-online" target="_blank" rel="noopener noreferrer" id="lesson-link">
-                            <span >jkj</span>
+                            <span ></span>
                         </a> 
                     </div>
                 </div>
@@ -176,6 +176,14 @@
                         <a href="javascript:void(0);" class="btn btn-primary mb-2" data-bs-toggle="modal"
                             data-bs-target="#new-task-modal" id="add-task" ><i class="mdi mdi-plus-circle me-2"></i> Book a lesson! </a>
                     </div>
+                    {% comment %} <div class="col-sm-8">
+                        <div class="text-sm-end">
+                            <button type="button" class="btn btn-success mb-2 me-1"><i class="mdi mdi-cog"></i></button>
+                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
+                            <button type="button" class="btn btn-light mb-2">Export</button>
+                            TIME ZONE
+                        </div>
+                    </div><!-- end col--> {% endcomment %}
                 </div>
 
                 <div class="table-responsive">
@@ -210,8 +218,8 @@
                                 <td>
                                     {{obj.teacher.full_name | title}}
                                 </td>
-                                <td>
-                                    {{obj.date|date:"d/m/Y, h:i A"}}
+                                <td>        
+                                    <span style="display:none;">{{obj.date|date:"YmdH"}}</span> {{obj.date|date:"d/m/Y, h:i A"}}
                                 </td>
                                 <td>
                                     {% if obj.status %}

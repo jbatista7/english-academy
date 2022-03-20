@@ -76,8 +76,30 @@ function disabledWeekDays(enabledDays) {
 
 function hoursDisabled(enabledHours) {
   let hours = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
   ];
   let h = enabledHours.toString().split(",").map(Number);
   let disabled_hours = hours.filter((hour) => !h.includes(hour));
@@ -113,7 +135,7 @@ $(function () {
   $(".datepicker")
     .datepicker({
       format: "dd/mm/yyyy",
-      startDate: "+1d",
+      startDate: "+2d",
     })
     .on("changeDate", function (e) {
       // `e` here contains the extra attributes
@@ -231,7 +253,10 @@ $(document).ready(function () {
       { orderable: !1 },
       { orderable: !1 },
     ],
-    order: false,
+    order: [
+      [5, "asc"],
+      [4, "asc"],
+    ],
     select: { style: "multi" },
     drawCallback: function () {
       $(".dataTables_paginate > .pagination").addClass("pagination-rounded"),
@@ -404,7 +429,11 @@ function open_edit_modal(id, lessonNumber, teacherName, teacherUserId) {
 
 function show_lesson_link(link) {
   lessonLink.setAttribute("href", link);
-  lessonLink.innerHTML = `<span>${link}</span>`;
+  if (link !== "None") {
+    lessonLink.innerHTML = `<span>${link}</span>`;
+  } else {
+    lessonLink.innerHTML = "";
+  }
 
   $("#lesson-link-modal").modal("show");
 }
@@ -413,7 +442,6 @@ function delete_modal(id, status) {
   taskId = id;
   taskStatus = status;
   $("#delete-task-modal").modal("show");
-  $("#purchase-reminder-modal").modal("show");
 }
 
 const convertTime12to24 = (time12h) => {
@@ -508,10 +536,9 @@ taskForm.addEventListener("submit", (e) => {
       } else {
         let dateStr = dateInput.value.split("/").reverse().join("-");
         let timeStr = convertTime12to24(timeInput.value);
-        teacherId =
-          teacherSelect[teacherSelect.options.selectedIndex].getAttribute(
-            "data-user_id"
-          );
+        teacherId = teacherSelect[
+          teacherSelect.options.selectedIndex
+        ].getAttribute("data-user_id");
         $.ajax({
           type: "POST",
           url: "/create-task/",

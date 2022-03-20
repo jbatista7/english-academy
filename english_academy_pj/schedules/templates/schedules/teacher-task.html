@@ -97,6 +97,7 @@
                                 </th>
                                 <th>Lesson</th>
                                 <th>Lesson Link</th>
+                                <th>ID</th>
                                 <th>Student</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -109,8 +110,6 @@
                                     <td>
                                     </td>
                                     <td data-student_id={{obj.student.id}} class='lesson_number'>
-
-
                                     </td>
                                     <td>
                                     
@@ -125,6 +124,9 @@
                                                 {{obj.lesson_link}}
                                             {% endif %}
                                         {% endif %}
+                                    </td>
+                                    <td>
+                                        {{obj.student.id}}
                                     </td>
                                     <td>
                                         {{obj.student.full_name}}
@@ -157,6 +159,11 @@
     </div> <!-- end col -->
 </div>
 <!-- end row -->
+
+
+
+{% comment %}  {% endcomment %}
+
 
 
 {% endblock content %}

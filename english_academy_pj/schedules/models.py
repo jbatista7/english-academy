@@ -2,7 +2,7 @@ from django.db import models
 from profiles.models import Teacher, Student
 from lessons.models import Pack
 from django.utils import timezone
-
+import datetime
 # Create your models here.
 
 class PurchasedPackage(models.Model):
@@ -17,13 +17,14 @@ class PurchasedPackage(models.Model):
 class Task(models.Model):
     STATUS_CHOICES = (
         ('active', 'Active'),
-        ('finished', 'Finished'),
+        ('finished', 'Finished'), #pendiente
     )
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     lesson_link = models.URLField(blank=True, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
     date = models.DateTimeField(default=timezone.now)
+    delete_date = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

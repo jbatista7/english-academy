@@ -119,7 +119,6 @@ function task_link(task_id, status) {
 }
 
 $(document).ready(function () {
-  // $.fn.dataTable.moment("DD/MM/YYYY, hh:mm")
   ("use strict");
   table = $("#tasks-datatable").DataTable({
     language: {
@@ -129,7 +128,7 @@ $(document).ready(function () {
       },
       info: "Showing bookings _START_ to _END_ of _TOTAL_",
       lengthMenu:
-        'Display <select class=\'form-select form-select-sm ms-1 me-1\'><option value="10">10</option><option value="20">20</option><option value="-1">All</option></select> bookings',
+        'Display <select class=\'form-select form-select-sm ms-1 me-1\'><option value="10">10</option><option value="20">20</option><option value="-1">All</option></select> tasks',
     },
     pageLength: 10,
     columns: [
@@ -139,12 +138,17 @@ $(document).ready(function () {
       { orderable: !1 },
       { orderable: !1 },
       { orderable: !1 },
+      {
+        orderable: !1, //orderSequence: ["desc"],
+      },
       { orderable: !1 },
       { orderable: !1 },
       { orderable: !1 },
-      //   { orderable: !1 },
     ],
-    order: false,
+    order: [
+      [6, "asc"],
+      [5, "asc"],
+    ],
     select: { style: "multi" },
     drawCallback: function () {
       $(".dataTables_paginate > .pagination").addClass("pagination-rounded"),

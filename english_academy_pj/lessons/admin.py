@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Pack, SupportAndSales, Magazines
+from .models import Pack, SupportAndSales, Magazines, Category
 # Register your models here.
+
 
 class PackAdmin(admin.ModelAdmin):
     list_filter = ['language']
@@ -24,6 +25,7 @@ class MagazineAdmin(admin.ModelAdmin):
             return False
         return super().has_add_permission(request)
 
+admin.site.register(Category)
 admin.site.register(Pack, PackAdmin)
 admin.site.register(SupportAndSales, SupportAndSalesAdmin)
 admin.site.register(Magazines)
