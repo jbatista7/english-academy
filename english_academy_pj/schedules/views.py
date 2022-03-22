@@ -18,6 +18,7 @@ from .decorators import allowed_users
 User = get_user_model()
 
 one_day = datetime.timedelta(days=1)
+two_days = datetime.timedelta(days=2)
 # one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
 
 
@@ -97,22 +98,20 @@ def task_view(request, *args, **kwargs):
     # print(user_last_login)
     from django.utils import timezone
 
-    today = timezone.now()
     user_id = request.user.id
     if role == 'student':
         active_task_count = 0
         for obj in Task.objects.filter(student__user_id=user_id):
             status = obj.status
-            old_date = obj.date
             # old_date = obj.date.date()
             # today = datetime.date.today()
 
-            time_diference = (old_date - today)
             # time_diference = (obj.date - obj.updated)
-            print(time_diference)
-            print(f'diferenc {old_date - today}')
             if status == 'active':
-                if time_diference < one_day: #delete the booking after one day without taking the class
+                today = timezone.now()
+                old_date = obj.date
+                time_diference = (old_date - today)
+                if time_diference < -one_day: #delete the booking after one day without taking the class
                     obj.delete()
         
         # get balance for reminder 
@@ -143,13 +142,22 @@ def task_view(request, *args, **kwargs):
     elif role == 'teacher':
         for obj in Task.objects.filter(teacher__user_id=user_id):
             status = obj.status
-            # old_date = obj.date.date()
-            # today = datetime.date.today()
-            time_diference = (old_date - today)
+            # pending = False
         
             if status == 'active':
-                if time_diference < one_day: #delete the booking after one day without taking the class
+                today = timezone.now()
+                old_date = obj.date
+                time_diference = (old_date - today)
+                # print(f'datetime: {datetime.datetime.now()}')
+                # one_hour = datetime.timedelta(hours=1, minutes=0, seconds=0)
+                # hour24 = datetime.timedelta(hours=23, minutes=59, seconds=59)
+                # hour48 = datetime.timedelta(hours=47, minutes=59, seconds=59)
+                if time_diference < -one_day: #delete the booking after one day without taking the class
                     obj.delete()
+                # elif time_diference >= one_day and time_diference < one_hour:
+                #     pending = True
+
+
         task_qs = Task.objects.filter(teacher__user_id=user_id)
 
         context = {
@@ -219,10 +227,9 @@ def update_task(request, pk):
     obj = Task.objects.get(pk=pk)
     if request.is_ajax():
         status = request.POST.get('status')
-        old_date = obj.date.date()
-        today = datetime.date.today()
-        time_diference = (old_date - today).days
-        time_diference = (old_date - today).days
+        # old_date = obj.date.date()
+        # today = datetime.date.today()
+        # time_diference = (old_date - today).days
         # one_day = datetime.timedelta(hours=23, minutes=59, seconds=59)
         # print(one_day)
         if status == 'active':
@@ -231,16 +238,21 @@ def update_task(request, pk):
             new_date = request.POST.get('date')
             new_date_aware = timezone.make_aware(parse_datetime(new_date), timezone=timezone.utc)
             task = Task.objects.filter(teacher=new_teacher, date=new_date_aware)
+
+            today = timezone.now()
+            old_date = obj.date
+            time_diference = (old_date - today)
+
             if task:
                 return JsonResponse({'updated': False, 'message': 'exists'}, safe=False)
             
-            if time_diference <= 2 and time_diference >= -1:
+            if time_diference <= two_days and time_diference >= -one_day:
                 return JsonResponse({
                     'msg':'Cannot change this booking, less than 48h'
                     })
             # elif old_date - now <= one_day:
             else:
-                if time_diference < -1:
+                if time_diference < -one_day:
                     obj.delete()
                     # return JsonResponse({})
                     return JsonResponse({
@@ -263,20 +275,27 @@ def update_task(request, pk):
 @allowed_users(allowed_roles=['teacher'])
 def finish_task(request, pk):
     obj = Task.objects.get(pk=pk)
-    old_date = obj.date.date()
-    today = datetime.date.today()
-    time_diference = (old_date - today).days
+    # old_date = obj.date.date()
+    # today = datetime.date.today()
+    # time_diference = (old_date - today).days
     # hour_difference = obj.date.replace(tzinfo=None) - datetime.datetime.now()
 
     if request.is_ajax():
-        if time_diference < 0: 
+        hour1 = datetime.timedelta(hours=1)
+        today = timezone.now()
+        old_date = obj.date
+        time_diference = (old_date - today)
+        print(time_diference)
+        if time_diference < -hour1 and time_diference >= -one_day: 
             obj.status = 'finished'
             obj.save()            
-        elif time_diference == 0:
-            if obj.date.hour > datetime.datetime.now().hour: 
-
-                obj.status = 'finished'
-                obj.save()                
+        # if time_diference < day0: 
+        #     obj.status = 'finished'
+        #     obj.save()            
+        # elif time_diference == 0:
+        #     if obj.date.hour > datetime.datetime.now().hour: 
+        #         obj.status = 'finished'
+        #         obj.save()                
         
         return JsonResponse({
             'status': obj.status,
@@ -286,20 +305,23 @@ def finish_task(request, pk):
 @allowed_users(allowed_roles=['student'])
 def delete_task(request, pk):
     obj = Task.objects.get(pk=pk)
-    old_date = obj.date.date()
-    today = datetime.date.today()
+    # old_date = obj.date.date()
+    # today = datetime.date.today()
     # now = timezone.now()
     if request.is_ajax():
         status = request.POST.get('status')
-        time_diference = (old_date - today).days
+        today = timezone.now()
+        old_date = obj.date
+        time_diference = (old_date - today)
 
         if status == 'active':
-            if time_diference <= 1 and time_diference >= -2: #can't delete task 24h before and 24h later, -2 has to be task_view -2
+            if time_diference <= one_day and time_diference >= -two_days: #can't delete task 24h before and 24h later, -2 has to be task_view -2
                 return JsonResponse({ 
                     'msg':'Cannot delete this booking, less than 24h'
                     })
             else:
-                obj.delete()
+                # obj.delete()
+                print('delete')
                 return JsonResponse({})
 
         elif status == 'finished':
@@ -332,18 +354,36 @@ def create_task(request):
     return JsonResponse({'created': False}, safe=False)
 
 @login_required
+@allowed_users(allowed_roles=['student', 'teacher'])
+def get_current_time(request):
+    time_data = timezone.now()
+    # time_data = datetime.datetime.now()
+    current_time = []
+    current_time.append({
+        "date_time": time_data.strftime('%Y%m%d%H'),
+        # "date": time_data.strftime('%Y/%m/%d'),
+        # "time": time_data.strftime('%H:%M:%S'),
+        # "time2": timezone.now().strftime('%H:%M:%S')
+        })
+    return JsonResponse({'current_time': current_time})
+
+@login_required
 @allowed_users(allowed_roles=['teacher'])
 def task_link(request, pk):
     obj = Task.objects.get(pk=pk)    
     if request.is_ajax():
         link = request.POST.get('link')
         status = request.POST.get('status')
-        old_date = obj.date.date()
-        today = datetime.date.today()
-        time_diference = (old_date - today).days
+        # old_date = obj.date.date()
+        # today = datetime.date.today()
+        # time_diference = (old_date - today).days
+
+        today = timezone.now()
+        old_date = obj.date
+        time_diference = (old_date - today)
 
         if status == 'active':
-            if time_diference <= -1:
+            if time_diference <= -one_day:
                 return JsonResponse({
                     'msg':'expired'
                     })

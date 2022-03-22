@@ -11,7 +11,8 @@ from .views import (
     task_link,
     delete_task, 
     teacher_task_data_view,
-    finish_task
+    finish_task,
+    get_current_time
 )
 
 app_name = 'schedules'
@@ -29,4 +30,5 @@ urlpatterns = [
     path('<pk>/finish/', finish_task, name='task-finish'),
     path('<pk>/delete/', delete_task, name='task-delete'),
     path('teacher-task/', teacher_task_data_view, name='teacher-task'),
+    path('get-current-time/', get_current_time, name='get-current-time'),
 ] 

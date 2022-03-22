@@ -24,7 +24,7 @@ class Task(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
     date = models.DateTimeField(default=timezone.now)
-    delete_date = models.DateTimeField(default=timezone.now)
+    # delete_date = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -33,6 +33,41 @@ document.addEventListener("DOMContentLoaded", (e) => {
     previous_id = student_id;
     num[i].textContent = counter + " h";
   }
+
+  //get current time
+  $.ajax({
+    type: "GET",
+    url: "/get-current-time/",
+    success: function (response) {
+      const timeData = response.current_time;
+      //pending task format
+      for (let i = 0; i < num.length; i++) {
+        let student_status = num[i].getAttribute("data-student_status");
+
+        if (student_status === "active") {
+          if (
+            num[i].parentElement.children[5].firstElementChild.textContent <
+            timeData[0].date_time
+          ) {
+            num[
+              i
+            ].parentElement.children[6].firstElementChild.classList.replace(
+              "badge-success-lighten",
+              "badge-warning-lighten"
+            );
+            // num[i].parentElement.children[6].firstElementChild.textContent =
+            //   "Pending";
+          }
+        }
+
+        // previous_id = student_id;
+        // num[i].textContent = counter + " h";
+      }
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
 });
 
 // const user_idText = JSON.parse(document.getElementById("user_id").textContent);

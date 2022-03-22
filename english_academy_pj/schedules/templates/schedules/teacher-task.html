@@ -109,7 +109,7 @@
                                 <tr>
                                     <td>
                                     </td>
-                                    <td data-student_id={{obj.student.id}} class='lesson_number'>
+                                    <td data-student_id={{obj.student.id}} data-student_status={{obj.status}} class='lesson_number'>
                                     </td>
                                     <td>
                                     
@@ -132,7 +132,7 @@
                                         {{obj.student.full_name}}
                                     </td>
                                     <td>
-                                        {{obj.date|date:"d/m/Y, h:i A"}}
+                                         <span style="display:none;">{{obj.date|date:"YmdH"}}</span> {{obj.date|date:"d/m/Y, h:i A"}}
                                     </td>
                                     <td>
                                         {% if obj.status %}
