@@ -9,10 +9,10 @@ class TeacherAdmin(admin.ModelAdmin):
     readonly_fields = ['user', 'country', 'phone_number']
     list_display = ['user_id', 'full_name', 'user_email', 'category']
     search_fields = ['user__id', 'user__email', 'user__first_name', 'user__last_name']
-    list_filter = ['category']
+    list_filter = ['category', 'email_confirmed']
     fieldsets = (
         (None, {
-            'fields': ('user', 'category','avatar', 'phone_number', 'country')
+            'fields': ('user', 'email_confirmed', 'category','avatar', 'phone_number', 'country')
             # 'fields': ('user', 'category','avatar',('hours','week_days'), 'phone_number', 'country')
         }),
         ('weekly class schedule', {'fields': (('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),)}),
@@ -42,6 +42,7 @@ class StudentAdmin(admin.ModelAdmin):
     readonly_fields = ['user_id', 'user', 'full_name']
     list_display = ['user_id', 'full_name', 'user_email', 'balance']
     search_fields = ['user__id', 'user__email', 'user__first_name', 'user__last_name']
+    list_filter = ['email_confirmed']
     ordering = ['user_id']
 
     def has_add_permission(self, request):

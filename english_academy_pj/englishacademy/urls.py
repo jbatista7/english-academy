@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import login_view, logout_view
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('schedules.urls', namespace='schedules')),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('lessons/', include('lessons.urls', namespace='lessons')),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
+    # path('activate/<uidb64>/<token>/', activate_view, name='activate'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,16 +1,17 @@
 from .models import Teacher, Student
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+
+from django.core.mail import EmailMessage
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.contrib.sites.shortcuts import get_current_site
+from .tokens import generate_token
 
 
 User = get_user_model()
@@ -20,15 +21,70 @@ def post_save_create_profile(sender, instance, created, **kwargs):
     if instance.role:
         if instance.role == 'teacher':
             Teacher.objects.update_or_create(user=instance, id=instance.id)
+            if Teacher.objects.get(id=instance.id).email_confirmed == False:
+                site = settings.DEFAULT_DOMAIN
+                # Email Address Confirmation Email
+                protocol = site.split('://')[0]
+                current_site = site.split('://')[1]#get_current_site(request)
+                email_subject = "Confirm your MOKKA Account"
+                body = render_to_string('profiles/email_confirmation.html',{
+                    'protocol': protocol,
+                    'domain': current_site,#current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(instance.pk)),
+                    'token': generate_token.make_token(instance)
+                })
+
+                email = EmailMessage(
+                    email_subject,
+                    body,
+                    settings.EMAIL_HOST_USER,
+                    [instance.email],
+                    )
+                email.fail_silently = False #True
+                email.send()
         elif instance.role == 'student':
             Student.objects.update_or_create(user=instance, id=instance.id)
+            if Student.objects.get(id=instance.id).email_confirmed == False:
+                site = settings.DEFAULT_DOMAIN
+                # Email Address Confirmation Email
+                protocol = site.split('://')[0]
+                current_site = site.split('://')[1]#get_current_site(request)
+                email_subject = "Confirm your MOKKA Account"
+                body = render_to_string('profiles/email_confirmation.html',{
+                    'protocol': protocol,
+                    'domain': current_site,#current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(instance.pk)),
+                    'token': generate_token.make_token(instance)
+                })
 
-#         print(instance)
-#         print(instance.email)
-#         print(User)
-#         # 
-#         # 
-#         # 
+                email = EmailMessage(
+                    email_subject,
+                    body,
+                    settings.EMAIL_HOST_USER,
+                    # settings.DEFAULT_FROM_EMAIL,
+                    [instance.email],
+                    )
+                email.fail_silently = False #True
+                email.send()
+
+        # myuser = User.objects.get(id=instance.id)
+
+        
+
+# @receiver(pre_save, sender=User)
+# def user_updated(sender, **kwargs):
+#     user = kwargs.get('instance', None)
+#     if user:
+#         new_password = user.password
+#         try:
+#             old_password = User.objects.get(pk=user.pk).password
+#             print(old_password)
+#         except User.DoesNotExist:
+#             old_password = None
+#         if new_password != old_password:
+#             pass
+#             # user.last_login = timezone.now()
+#         # do what you need here
 #         token_generator = PasswordResetTokenGenerator()
 #         token = token_generator.make_token(instance)
 #         print(instance.reque)

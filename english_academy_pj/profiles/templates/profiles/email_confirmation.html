@@ -1,11 +1,9 @@
 {% autoescape off %}
 Hello,
 
-Please click on the link to confirm your registration,  
+To activate your account, click the link below.
 
-http://{{ domain }}{% url 'activate' uidb64=uid token=token %}  {% endcomment %}
-
-You must enter a password at the first login
+{{ protocol }}://{{ domain }}{% url 'profiles:activate' uidb64=uid token=token %}
 
 This link can only be used once. If you need to reset your password again, please visit {{ protocol }}://{{domain}} and request another reset.
 

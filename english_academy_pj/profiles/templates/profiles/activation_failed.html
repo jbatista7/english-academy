@@ -1,0 +1,17 @@
+{% extends 'auth/base.html' %}
+
+{% block title %}
+activation failed
+{% endblock title %}
+
+{% block content %}
+
+    <!-- title-->
+    <h4 class="mt-0">Activation Failed</h4>
+
+    <p class="text-muted mb-4">
+        Activation of your account has failed, try to recover your account 
+        <a href="{% url 'accounts:password-reset-view' %}">here</a>, otherwise contact the mokka team. 
+    </p>
+    
+{% endblock content %}

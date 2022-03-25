@@ -1,11 +1,17 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 from django.dispatch import receiver
+from django.template import context
 from .utils import generate_custom_id
 
 from django.contrib.auth.models import Group, Permission
+
+
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 
 
 class UserManager(BaseUserManager):
@@ -141,3 +147,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     #         ("can_go_mussoorie", "Trip to Mussoorie"),
     #         ("can_go_haridwaar", "Trip to Haridwaar"),
     #         ("can_go_rishikesh", "Trip to Rishikesh"),)
+
+
+# class EmailConfirmed(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL)
+#     activation_key = models.CharField(max_length=200)
+#     confirmed = models.BooleanField(default=False)
+
+#     def __unicode__(self):
+#         return str(self.confirmed)
+
+#     def active_user_email(self):
+#         #send email here and render string
+#         activation_url = f"http://localhost:8000/accounts/activate/{self.activation_key}"
+#         context = {
+#             "activation_key": self.activation_key,
+#             "activation_url": activation_url,
+#         }
+#         body = render_to_string("accounts/activation_message.txt")
+#         subject = "Activate your Email"
+#         self.email_user(subject, body, settings.DEFAULT_FROM_EMAIL)
+
+#     def email_user(self, subject, body, from_email=None, **kwargs):
+#         email = EmailMessage(subject, 
+#             body,    
+#             settings.DEFAULT_FROM_EMAIL,            
+#             ['mokka@gmail.com'],        
+#             )
+#         email.fail_silently = False
+#         email.send()

@@ -9,7 +9,7 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # email_confirmed = models.BooleanField(default=False)
+    email_confirmed = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=12, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)

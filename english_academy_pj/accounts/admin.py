@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+# from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .forms import UserAdminCreationForm, UserAdminChangeForm
@@ -8,12 +8,10 @@ from .forms import UserAdminCreationForm, UserAdminChangeForm
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from django.contrib.contenttypes.models import ContentType
-
+# from django.contrib.contenttypes.models import ContentType
 
 
 User = get_user_model()
- 
 
 class UserAdminChangeForm(forms.ModelForm):
     # if User.is_superuser:

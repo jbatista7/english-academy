@@ -320,8 +320,8 @@ def delete_task(request, pk):
                     'msg':'Cannot delete this booking, less than 24h'
                     })
             else:
-                # obj.delete()
-                print('delete')
+                obj.delete()
+                # print('delete')
                 return JsonResponse({})
 
         elif status == 'finished':

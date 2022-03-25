@@ -23,11 +23,12 @@ class TaskResource(resources.ModelResource):
 
     class Meta:
         model = Task
-        fields = ('teacher', 'status', 'date')
-        export_order = ('teacher' , 'full_name', 'status', 'date')
+        fields = ('teacher', 'status', 'student', 'date')
+        export_order = ('teacher' , 'full_name', 'status', 'student', 'date')
 
     def dehydrate_full_name(self, Task):
         return f'{Task.teacher.user.first_name} {Task.teacher.user.last_name}'
+
 
 class TaskAdmin(ExportActionMixin, admin.ModelAdmin):
     resource_class = TaskResource
@@ -56,9 +57,25 @@ class TaskAdmin(ExportActionMixin, admin.ModelAdmin):
     def teacher_full_name(self, obj):
         return obj.teacher.user.full_name()
 
-class PurchasedPackageAdmin(admin.ModelAdmin):
+
+class PurchasedPackageResource(resources.ModelResource):
+
+    full_name = fields.Field()
+
+    class Meta:
+        model = PurchasedPackage
+        fields = ('student', 'pack__name', 'pack__language__name', 'pack__number_of_lessons', 'pack__package_price', 'created', 'updated')
+        export_order = ('student' , 'full_name', 'pack__name', 'pack__language__name', 'pack__number_of_lessons', 'pack__package_price', 'created', 'updated')
+
+    def dehydrate_full_name(self, PurchasedPackage):
+        return f'{PurchasedPackage.student.user.first_name} {PurchasedPackage.student.user.last_name}'
+
+
+
+class PurchasedPackageAdmin(ExportActionMixin, admin.ModelAdmin):
+    resource_class = PurchasedPackageResource
     # actions = None
-    list_display = ['student_id', 'full_name', 'pack', 'created']
+    list_display = ['student_id', 'full_name', 'pack', 'created', 'updated']
     # filter_horizontal = ['student_id']
     list_filter = ['pack']
     readonly_fields = ['full_name']
