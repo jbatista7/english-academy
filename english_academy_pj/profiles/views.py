@@ -1,3 +1,4 @@
+from django.contrib.sessions.models import Session
 # from schedules.views import task_data_view
 from django.contrib.auth.decorators import login_required
 from schedules.decorators import allowed_users
@@ -8,15 +9,16 @@ from schedules.models import PurchasedPackage, Task
 from lessons.models import Pack
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django import forms
 # Create your views here.
+from django.contrib.auth.tokens import default_token_generator
 
-# from django.http import HttpResponseRedirect, QueryDict
+
+from django.http import HttpResponseRedirect, QueryDict
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 User = get_user_model()
-
 
 
 from django.template.loader import render_to_string
@@ -28,9 +30,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth import authenticate, login, logout
-from . tokens import generate_token
 
-INTERNAL_RESET_SESSION_TOKEN = "_password_reset_token"
 
 @login_required
 @allowed_users(allowed_roles=['student', 'teacher'])
@@ -90,6 +90,7 @@ def edit_view(request):
         if all([form.is_valid(), userForm.is_valid()]):
             form.save()
             userForm.save()
+            return redirect('profiles:profile')
 
     context = {
         'qs_profile': qs_profile,
@@ -121,25 +122,22 @@ def activate_view(request,uidb64,token):
         myuser = User.objects.get(id=uid)
     except (TypeError,ValueError,OverflowError,User.DoesNotExist):
         myuser = None
-    # print(generate_token.check_token(myuser,token))
 
-    if myuser is not None and generate_token.check_token(myuser,token):
+    token_maker = PasswordResetTokenGenerator()
+    
+    if myuser is not None and token_maker.check_token(myuser,token):
 
-        if myuser.role == 'student':
-            user_profile = Student.objects.get(user_id=myuser.id)
-        elif myuser.role == 'teacher':
-            user_profile = Teacher.objects.get(user_id=myuser.id)
+        if myuser.role:
+            if myuser.role == 'student':
+                user_profile = Student.objects.get(user_id=myuser.id)
+            elif myuser.role == 'teacher':
+                user_profile = Teacher.objects.get(user_id=myuser.id)
 
-        user_profile.email_confirmed = True
-        user_profile.save()
-        # myuser.is_active = True
-        # user.profile.signup_confirmation = True
-        # myuser.save()
-        # login(request, myuser)
+            user_profile.email_confirmed = True
+            user_profile.save()
 
-        token_maker = PasswordResetTokenGenerator()
-        token = token_maker.make_token(myuser)
-        uid = urlsafe_base64_encode(force_bytes(myuser.pk)) #same thing django does to generate uid
-        return redirect('accounts:password-reset-confirm-view', uid, token)
+            new_password_token = token_maker.make_token(myuser)
+            return redirect('accounts:password-reset-confirm-view', uidb64, new_password_token)
+        return render(request,'profiles/activation_failed.html')
     else:
         return render(request,'profiles/activation_failed.html')

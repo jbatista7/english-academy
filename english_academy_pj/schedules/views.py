@@ -11,6 +11,7 @@ from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from .decorators import allowed_users
+from django.utils.timezone import get_current_timezone, make_aware, now
 
 # from math import copysign
 
@@ -97,6 +98,8 @@ def task_view(request, *args, **kwargs):
     
     # print(user_last_login)
     from django.utils import timezone
+    print(get_current_timezone)
+    print(now)
 
     user_id = request.user.id
     if role == 'student':
@@ -236,7 +239,8 @@ def update_task(request, pk):
             teacher_user_id = request.POST.get('teacher_user_id')
             new_teacher = Teacher.objects.get(user_id=teacher_user_id)
             new_date = request.POST.get('date')
-            new_date_aware = timezone.make_aware(parse_datetime(new_date), timezone=timezone.utc)
+            new_date_aware = timezone.make_aware(parse_datetime(new_date))
+            # new_date_aware = timezone.make_aware(parse_datetime(new_date), timezone=timezone.utc)
             task = Task.objects.filter(teacher=new_teacher, date=new_date_aware)
 
             today = timezone.now()
@@ -345,7 +349,8 @@ def create_task(request):
         teacher_user_id = request.POST.get('teacher_user_id')
         teacher_obj = Teacher.objects.get(user_id=teacher_user_id)        
         date_obj = request.POST.get('date')
-        new_date_aware = timezone.make_aware(parse_datetime(date_obj), timezone=timezone.utc)
+        new_date_aware = timezone.make_aware(parse_datetime(date_obj))
+        # new_date_aware = timezone.make_aware(parse_datetime(date_obj), timezone=timezone)
         task = Task.objects.filter(teacher=teacher_obj, date=new_date_aware)
         if task:
             return JsonResponse({'created': False, 'message': 'exists'}, safe=False)

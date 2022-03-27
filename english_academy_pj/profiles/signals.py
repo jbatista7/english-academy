@@ -1,17 +1,14 @@
 from .models import Teacher, Student
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
 from django.core.mail import EmailMessage
-from django.conf import settings
 from django.template.loader import render_to_string
-
-from django.core.mail import EmailMessage
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from .tokens import generate_token
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 User = get_user_model()
@@ -22,8 +19,9 @@ def post_save_create_profile(sender, instance, created, **kwargs):
         if instance.role == 'teacher':
             Teacher.objects.update_or_create(user=instance, id=instance.id)
             if Teacher.objects.get(id=instance.id).email_confirmed == False:
-                site = settings.DEFAULT_DOMAIN
                 # Email Address Confirmation Email
+                site = settings.DEFAULT_DOMAIN
+                token_maker = PasswordResetTokenGenerator()
                 protocol = site.split('://')[0]
                 current_site = site.split('://')[1]#get_current_site(request)
                 email_subject = "Confirm your MOKKA Account"
@@ -31,7 +29,7 @@ def post_save_create_profile(sender, instance, created, **kwargs):
                     'protocol': protocol,
                     'domain': current_site,#current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(instance.pk)),
-                    'token': generate_token.make_token(instance)
+                    'token': token_maker.make_token(instance)
                 })
 
                 email = EmailMessage(
@@ -44,9 +42,10 @@ def post_save_create_profile(sender, instance, created, **kwargs):
                 email.send()
         elif instance.role == 'student':
             Student.objects.update_or_create(user=instance, id=instance.id)
-            if Student.objects.get(id=instance.id).email_confirmed == False:
-                site = settings.DEFAULT_DOMAIN
+            if Student.objects.get(id=instance.id).email_confirmed == False:                
                 # Email Address Confirmation Email
+                site = settings.DEFAULT_DOMAIN
+                token_maker = PasswordResetTokenGenerator()
                 protocol = site.split('://')[0]
                 current_site = site.split('://')[1]#get_current_site(request)
                 email_subject = "Confirm your MOKKA Account"
@@ -54,7 +53,7 @@ def post_save_create_profile(sender, instance, created, **kwargs):
                     'protocol': protocol,
                     'domain': current_site,#current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(instance.pk)),
-                    'token': generate_token.make_token(instance)
+                    'token': token_maker.make_token(instance)
                 })
 
                 email = EmailMessage(
