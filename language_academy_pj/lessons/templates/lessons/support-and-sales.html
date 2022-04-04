@@ -1,0 +1,31 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+support and sales
+{% endblock title %}
+
+{% block page_title %}
+Support and Sales
+{% endblock page_title %}
+
+{% block content %}
+
+    <div class="row">
+
+        {% for obj in supportandsales %}
+            <div class="col-sm-6">
+                <div class="card card-body">
+                    <h5 class="card-title">{{obj.name | title}}</h5>
+                    {% comment %} <p class="card-text">With supporting text below as a natural lead-in to additional
+                        content.</p> {% endcomment %}
+                    <a href="{{obj.supportUrl}}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Go {{obj.name | title}}</a>
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+        {% endfor %}
+
+    </div>
+    <!-- end row -->
+
+
+{% endblock content %}

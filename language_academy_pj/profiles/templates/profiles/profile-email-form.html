@@ -1,0 +1,25 @@
+{% extends 'auth/base.html' %}
+
+{% block title %}
+change email
+{% endblock title %}
+
+{% block content %}
+
+    <!-- title-->
+    <h4 class="mt-0">Change email</h4>
+
+    <form action="" method="post">
+    {% csrf_token %}
+
+        <div class="mb-3">
+            {{form.as_p}}
+        </div>
+
+        <div class="d-grid mb-0 text-center">
+                <button class="btn btn-primary" type="submit"><i class="mdi mdi-email"></i> Change email </button>
+            </div>
+
+    </form>
+    
+{% endblock content %}

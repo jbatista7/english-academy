@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Profile
+{% endblock title %}
+
+{% block page_title %}
+Profile
+{% endblock page_title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Profile -->
+        <div class="card bg-primary">
+            <div class="card-body profile-user-box">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="avatar-lg">
+                                    <img src="{{qs_profile.avatar.url}}" alt="" class="rounded-circle img-thumbnail">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div>
+                                    <h4 class="mt-1 mb-1 text-white">{{qs_profile.user.full_name | title}}</h4>
+                                    <p class="font-13 text-white-50">{{qs_profile.category | title}} Teacher</p>
+
+                                    <ul class="mb-0 list-inline text-light">
+                                        <li class="list-inline-item me-3">
+                                            <h5 class="mb-1">{{task_amount}}</h5>
+                                            <p class="mb-0 font-13 text-white-50">Number of Bookings</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end col-->
+
+                    <div class="col-sm-4">
+                        <div class="text-center mt-sm-0 mt-3 text-sm-end">
+                            <a href="{% url 'profiles:edit' %}">
+                                <button type="button" class="btn btn-light">
+                                    <i class="mdi mdi-account-edit me-1"></i> Edit Profile
+                                </button>
+                            </a>
+                        </div>
+                    </div> <!-- end col-->
+                </div> <!-- end row -->
+
+            </div> <!-- end card-body/ profile-user-box-->
+        </div><!--end profile/ card -->
+    </div> <!-- end col-->
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Personal-Information -->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mt-0 mb-3">Personal Information</h4>
+                <hr>
+
+                <div class="text-start">
+                    <p class="text-muted"><strong>Full Name :</strong> <span class="ms-2">{{qs_profile.user.full_name}}</span></p>
+
+                    <p class="text-muted"><strong>Mobile :</strong><span class="ms-2">{{qs_profile.phone_number}}</span></p>
+
+                    <p class="text-muted"><strong>Email :</strong> <span class="ms-2">{{qs_profile.user.email}}</span></p>
+
+                    <p class="text-muted"><strong>Location :</strong> <span class="ms-2">{{qs_profile.country}}</span></p>
+                </div>
+            </div>
+        </div>
+        <!-- Personal-Information -->
+    </div> <!-- end col-->
+
+
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-12">                        
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-3">All {{language}} packs</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-centered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Pack</th>
+                                <th>Lessons</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for pack in qs_packs %}
+                            <tr>
+                                <td>{{pack.name | capfirst}}</td>
+                                <td>{{pack.number_of_lessons}} h</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div> <!-- end table responsive-->
+            </div> <!-- end col-->
+        </div> <!-- end row-->
+
+    </div>
+</div>
+
+{% endblock content %}

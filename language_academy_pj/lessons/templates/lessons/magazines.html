@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+magazine
+{% endblock title %}
+
+{% block page_title %}
+Magazine
+{% endblock page_title %}
+
+{% block content %}
+
+    <div class="row">
+
+        {% for obj in magazines %}
+            <div class="col-sm-6">
+                <div class="card card-body">
+                    <h5 class="card-title">{{obj.name | title}}</h5>
+                    <a href="{{obj.magazineUrl}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Go {{obj.name | title}}</a>
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+        {% endfor %}
+
+    </div>
+    <!-- end row -->
+
+
+{% endblock content %}
